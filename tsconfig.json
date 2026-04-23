@@ -8,6 +8,9 @@
     },
     {
       "path": "./apps/contracts"
+    },
+    {
+      "path": "./libs/shared-types"
     }
   ]
 }
