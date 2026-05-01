@@ -10,6 +10,18 @@
     "apps/web/**/*.{ts,tsx,js,jsx}": "pnpm nx run web:lint"
   },
   "private": true,
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "keccak",
+      "secp256k1",
+      "esbuild",
+      "@swc/core",
+      "nx",
+      "sharp",
+      "@parcel/watcher",
+      "unrs-resolver"
+    ]
+  },
   "dependencies": {
     "next": "~16.1.6",
     "react": "^19.0.0",

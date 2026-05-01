@@ -102,6 +102,25 @@ pnpm nx run contracts:test      # Run Hardhat tests
 | `pnpm nx run contracts:lint` | Lint contract code |
 | `pnpm nx run shared-types:build` | Build shared types library |
 
+## Vercel Deployment
+
+1. Connect your GitHub repository to [Vercel](https://vercel.com)
+2. Set the **Root Directory** to `apps/web`
+3. Configure the following **Environment Variables** in the Vercel dashboard:
+
+| Key | Value | Notes |
+|-----|-------|-------|
+| `RELAYER_PRIVATE_KEY` | `0x...` | Server-side only |
+| `OPENAI_API_KEY` | `sk-...` | Server-side only |
+| `PINATA_JWT` | `eyJ...` | Server-side only |
+| `SEPOLIA_RPC_URL` | `https://...` | Server-side only |
+| `NEXT_PUBLIC_CONTRACT_ADDRESS` | `0x...` | Client-safe |
+| `NEXT_PUBLIC_CHAIN_ID` | `11155111` | Client-safe |
+
+4. Deploy — **Vercel automatically detects Next.js** and uses the default build command (`next build`) and output directory (`.next`)
+
+The relayer API routes under `apps/web/src/app/api/` will use the server-side environment variables to interact with the Sepolia network, OpenAI, and Pinata IPFS.
+
 ## Deployed Addresses
 
 | Contract | Sepolia Address |
