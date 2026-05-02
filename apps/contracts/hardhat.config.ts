@@ -17,6 +17,14 @@ const config: HardhatUserConfig = {
         : [],
     },
   },
+  etherscan: {
+    apiKey: {
+      sepolia: process.env.ETHERSCAN_API_KEY ?? '',
+    },
+  },
+  sourcify: {
+    enabled: false,
+  },
   typechain: {
     outDir: '../../libs/shared-types/src/generated',
     target: 'ethers-v6',
