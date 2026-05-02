@@ -54,7 +54,6 @@ out
 # Hardhat
 apps/contracts/artifacts
 apps/contracts/cache
-libs/shared-types/src/generated
 
 test-output
 
