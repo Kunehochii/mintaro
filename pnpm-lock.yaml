@@ -210,9 +210,6 @@ importers:
       '@org/shared-types':
         specifier: workspace:*
         version: link:../shared-types
-      ethers:
-        specifier: ^6.13.0
-        version: 6.16.0
       react:
         specifier: ^19.0.0
         version: 19.2.5
