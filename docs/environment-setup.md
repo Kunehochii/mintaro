@@ -33,9 +33,9 @@ The private key for the wallet that deploys the contract and calls `setTokenURI`
 
 3. **Deploy the contract from this wallet.** After funding:
 
-   ```bash
-   pnpm nx run contracts:deploy --network sepolia
-   ```
+    ```bash
+    pnpm nx run contracts:deploy -- --network sepolia
+    ```
 
    This wallet becomes the contract `owner`, authorized to call `setTokenURI`.
 
@@ -97,6 +97,29 @@ Used by the relayer to generate NFT artwork with DALL·E 3.
 
 ---
 
+## ETHERSCAN_API_KEY
+
+A free API key from Etherscan used to verify the contract source code on Sepolia Etherscan.
+
+**Cost**: Free.
+
+**Steps**:
+
+1. **Sign up** at [etherscan.io](https://etherscan.io/register).
+
+2. **Generate an API key** at [etherscan.io/myapikey](https://etherscan.io/myapikey).
+   Click **Add**, name it (e.g., "mintaro"), and copy the key.
+
+3. **Add to `.env.local`:**
+
+   ```
+   ETHERSCAN_API_KEY=YourApiKeyToken
+   ```
+
+The deploy script uses this key to automatically verify the contract source on Etherscan after deployment.
+
+---
+
 ## SEPOLIA_RPC_URL
 
 A JSON-RPC endpoint for connecting to the Sepolia testnet.
@@ -134,7 +157,7 @@ The deployed `AffixNFT` contract address on Sepolia.
 1. **Deploy the contract** (after setting `RELAYER_PRIVATE_KEY` and `SEPOLIA_RPC_URL`):
 
    ```bash
-   pnpm nx run contracts:deploy --network sepolia
+    pnpm nx run contracts:deploy -- --network sepolia
    ```
 
 2. **Copy the address** from the Hardhat output and add it to `.env.local`:
