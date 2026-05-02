@@ -67,19 +67,8 @@ The chain is the source of truth: ownership via `ownerOf(tokenId)`, gallery via 
 
 ### Environment Setup
 
-Copy `.env.example` to `.env.local` and fill in:
-
-```bash
-# Server-side only (never prefix with NEXT_PUBLIC_)
-RELAYER_PRIVATE_KEY=    # Wallet that calls setTokenURI
-OPENAI_API_KEY=         # OpenAI API key for DALL·E 3
-PINATA_JWT=             # Pinata JWT for IPFS pinning
-SEPOLIA_RPC_URL=        # Alchemy/Infura Sepolia RPC URL
-
-# Client-safe
-NEXT_PUBLIC_CONTRACT_ADDRESS=  # Deployed AffixNFT address
-NEXT_PUBLIC_CHAIN_ID=11155111
-```
+Copy `.env.example` to `.env.local` and fill in each value.
+See **[Environment Variables Setup](./docs/environment-setup.md)** for step-by-step instructions on obtaining every key (free, except OpenAI which requires a $5 top-up).
 
 ### Local Development
 

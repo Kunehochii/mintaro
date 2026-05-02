@@ -57,3 +57,5 @@ apps/contracts/cache
 libs/shared-types/src/generated
 
 test-output
+
+.env
