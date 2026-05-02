@@ -1,7 +1,19 @@
+import Hero from '../components/landing/Hero';
+import HowItWorks from '../components/landing/HowItWorks';
+import RaritySpectrum from '../components/landing/RaritySpectrum';
+import FuseTeaser from '../components/landing/FuseTeaser';
+import FinalCTA from '../components/landing/FinalCTA';
+import Footer from '../components/landing/Footer';
+
 export default function Index() {
   return (
-    <div className="landing">
-      <h1>Connect to start minting</h1>
-    </div>
+    <>
+      <Hero />
+      <HowItWorks />
+      <RaritySpectrum />
+      <FuseTeaser />
+      <FinalCTA />
+      <Footer />
+    </>
   );
 }
