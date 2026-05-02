@@ -6,52 +6,52 @@ import {
   ContractFactory,
   ContractTransactionResponse,
   Interface,
-} from "ethers";
-import type { Signer, ContractDeployTransaction, ContractRunner } from "ethers";
-import type { NonPayableOverrides } from "../../../../common";
+} from 'ethers';
+import type { Signer, ContractDeployTransaction, ContractRunner } from 'ethers';
+import type { NonPayableOverrides } from '../../../../common';
 import type {
   Strings,
   StringsInterface,
-} from "../../../../@openzeppelin/contracts/utils/Strings";
+} from '../../../../@openzeppelin/contracts/utils/Strings';
 
 const _abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
+        internalType: 'uint256',
+        name: 'value',
+        type: 'uint256',
       },
       {
-        internalType: "uint256",
-        name: "length",
-        type: "uint256",
+        internalType: 'uint256',
+        name: 'length',
+        type: 'uint256',
       },
     ],
-    name: "StringsInsufficientHexLength",
-    type: "error",
+    name: 'StringsInsufficientHexLength',
+    type: 'error',
   },
   {
     inputs: [],
-    name: "StringsInvalidAddressFormat",
-    type: "error",
+    name: 'StringsInvalidAddressFormat',
+    type: 'error',
   },
   {
     inputs: [],
-    name: "StringsInvalidChar",
-    type: "error",
+    name: 'StringsInvalidChar',
+    type: 'error',
   },
 ] as const;
 
 const _bytecode =
-  "0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea264697066735822122018d40d1c7c6dc2374cfed37ed969822d3e69ec647438ef3869310398213eeac864736f6c634300081c0033";
+  '0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea264697066735822122018d40d1c7c6dc2374cfed37ed969822d3e69ec647438ef3869310398213eeac864736f6c634300081c0033';
 
 type StringsConstructorParams =
   | [signer?: Signer]
   | ConstructorParameters<typeof ContractFactory>;
 
 const isSuperArgs = (
-  xs: StringsConstructorParams
+  xs: StringsConstructorParams,
 ): xs is ConstructorParameters<typeof ContractFactory> => xs.length > 1;
 
 export class Strings__factory extends ContractFactory {
@@ -64,7 +64,7 @@ export class Strings__factory extends ContractFactory {
   }
 
   override getDeployTransaction(
-    overrides?: NonPayableOverrides & { from?: string }
+    overrides?: NonPayableOverrides & { from?: string },
   ): Promise<ContractDeployTransaction> {
     return super.getDeployTransaction(overrides || {});
   }

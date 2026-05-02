@@ -13,7 +13,7 @@ describe('RARITY_PROBABILITIES', () => {
   it('should sum to 100%', () => {
     const total = Object.values(RARITY_PROBABILITIES).reduce(
       (sum, p) => sum + p,
-      0
+      0,
     );
     expect(total).toBe(100);
   });

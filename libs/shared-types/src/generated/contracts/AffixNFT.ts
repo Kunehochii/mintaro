@@ -13,7 +13,7 @@ import type {
   ContractRunner,
   ContractMethod,
   Listener,
-} from "ethers";
+} from 'ethers';
 import type {
   TypedContractEvent,
   TypedDeferredTopicFilter,
@@ -21,159 +21,159 @@ import type {
   TypedLogDescription,
   TypedListener,
   TypedContractMethod,
-} from "../common";
+} from '../common';
 
 export interface AffixNFTInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "approve"
-      | "balanceOf"
-      | "getApproved"
-      | "isApprovedForAll"
-      | "mint"
-      | "name"
-      | "owner"
-      | "ownerOf"
-      | "renounceOwnership"
-      | "safeTransferFrom(address,address,uint256)"
-      | "safeTransferFrom(address,address,uint256,bytes)"
-      | "setApprovalForAll"
-      | "setTokenURI"
-      | "supportsInterface"
-      | "symbol"
-      | "tokenURI"
-      | "totalMinted"
-      | "transferFrom"
-      | "transferOwnership"
+      | 'approve'
+      | 'balanceOf'
+      | 'getApproved'
+      | 'isApprovedForAll'
+      | 'mint'
+      | 'name'
+      | 'owner'
+      | 'ownerOf'
+      | 'renounceOwnership'
+      | 'safeTransferFrom(address,address,uint256)'
+      | 'safeTransferFrom(address,address,uint256,bytes)'
+      | 'setApprovalForAll'
+      | 'setTokenURI'
+      | 'supportsInterface'
+      | 'symbol'
+      | 'tokenURI'
+      | 'totalMinted'
+      | 'transferFrom'
+      | 'transferOwnership',
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
-      | "Approval"
-      | "ApprovalForAll"
-      | "BatchMetadataUpdate"
-      | "MetadataUpdate"
-      | "MintRequested"
-      | "OwnershipTransferred"
-      | "Transfer"
+      | 'Approval'
+      | 'ApprovalForAll'
+      | 'BatchMetadataUpdate'
+      | 'MetadataUpdate'
+      | 'MintRequested'
+      | 'OwnershipTransferred'
+      | 'Transfer',
   ): EventFragment;
 
   encodeFunctionData(
-    functionFragment: "approve",
-    values: [AddressLike, BigNumberish]
+    functionFragment: 'approve',
+    values: [AddressLike, BigNumberish],
   ): string;
   encodeFunctionData(
-    functionFragment: "balanceOf",
-    values: [AddressLike]
+    functionFragment: 'balanceOf',
+    values: [AddressLike],
   ): string;
   encodeFunctionData(
-    functionFragment: "getApproved",
-    values: [BigNumberish]
+    functionFragment: 'getApproved',
+    values: [BigNumberish],
   ): string;
   encodeFunctionData(
-    functionFragment: "isApprovedForAll",
-    values: [AddressLike, AddressLike]
+    functionFragment: 'isApprovedForAll',
+    values: [AddressLike, AddressLike],
   ): string;
-  encodeFunctionData(functionFragment: "mint", values?: undefined): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: 'mint', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'name', values?: undefined): string;
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "ownerOf",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined
+    functionFragment: 'ownerOf',
+    values: [BigNumberish],
   ): string;
   encodeFunctionData(
-    functionFragment: "safeTransferFrom(address,address,uint256)",
-    values: [AddressLike, AddressLike, BigNumberish]
+    functionFragment: 'renounceOwnership',
+    values?: undefined,
   ): string;
   encodeFunctionData(
-    functionFragment: "safeTransferFrom(address,address,uint256,bytes)",
-    values: [AddressLike, AddressLike, BigNumberish, BytesLike]
+    functionFragment: 'safeTransferFrom(address,address,uint256)',
+    values: [AddressLike, AddressLike, BigNumberish],
   ): string;
   encodeFunctionData(
-    functionFragment: "setApprovalForAll",
-    values: [AddressLike, boolean]
+    functionFragment: 'safeTransferFrom(address,address,uint256,bytes)',
+    values: [AddressLike, AddressLike, BigNumberish, BytesLike],
   ): string;
   encodeFunctionData(
-    functionFragment: "setTokenURI",
-    values: [BigNumberish, string]
+    functionFragment: 'setApprovalForAll',
+    values: [AddressLike, boolean],
   ): string;
   encodeFunctionData(
-    functionFragment: "supportsInterface",
-    values: [BytesLike]
-  ): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "tokenURI",
-    values: [BigNumberish]
+    functionFragment: 'setTokenURI',
+    values: [BigNumberish, string],
   ): string;
   encodeFunctionData(
-    functionFragment: "totalMinted",
-    values?: undefined
+    functionFragment: 'supportsInterface',
+    values: [BytesLike],
+  ): string;
+  encodeFunctionData(functionFragment: 'symbol', values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: 'tokenURI',
+    values: [BigNumberish],
   ): string;
   encodeFunctionData(
-    functionFragment: "transferFrom",
-    values: [AddressLike, AddressLike, BigNumberish]
+    functionFragment: 'totalMinted',
+    values?: undefined,
   ): string;
   encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [AddressLike]
+    functionFragment: 'transferFrom',
+    values: [AddressLike, AddressLike, BigNumberish],
+  ): string;
+  encodeFunctionData(
+    functionFragment: 'transferOwnership',
+    values: [AddressLike],
   ): string;
 
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getApproved",
-    data: BytesLike
+    functionFragment: 'getApproved',
+    data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: "isApprovedForAll",
-    data: BytesLike
+    functionFragment: 'isApprovedForAll',
+    data: BytesLike,
   ): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'mint', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'ownerOf', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "safeTransferFrom(address,address,uint256)",
-    data: BytesLike
+    functionFragment: 'renounceOwnership',
+    data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: "safeTransferFrom(address,address,uint256,bytes)",
-    data: BytesLike
+    functionFragment: 'safeTransferFrom(address,address,uint256)',
+    data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setApprovalForAll",
-    data: BytesLike
+    functionFragment: 'safeTransferFrom(address,address,uint256,bytes)',
+    data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setTokenURI",
-    data: BytesLike
+    functionFragment: 'setApprovalForAll',
+    data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: "supportsInterface",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalMinted",
-    data: BytesLike
+    functionFragment: 'setTokenURI',
+    data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
+    functionFragment: 'supportsInterface',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'tokenURI', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'totalMinted',
+    data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: "transferOwnership",
-    data: BytesLike
+    functionFragment: 'transferFrom',
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: 'transferOwnership',
+    data: BytesLike,
   ): Result;
 }
 
@@ -181,7 +181,7 @@ export namespace ApprovalEvent {
   export type InputTuple = [
     owner: AddressLike,
     approved: AddressLike,
-    tokenId: BigNumberish
+    tokenId: BigNumberish,
   ];
   export type OutputTuple = [owner: string, approved: string, tokenId: bigint];
   export interface OutputObject {
@@ -199,12 +199,12 @@ export namespace ApprovalForAllEvent {
   export type InputTuple = [
     owner: AddressLike,
     operator: AddressLike,
-    approved: boolean
+    approved: boolean,
   ];
   export type OutputTuple = [
     owner: string,
     operator: string,
-    approved: boolean
+    approved: boolean,
   ];
   export interface OutputObject {
     owner: string;
@@ -220,7 +220,7 @@ export namespace ApprovalForAllEvent {
 export namespace BatchMetadataUpdateEvent {
   export type InputTuple = [
     _fromTokenId: BigNumberish,
-    _toTokenId: BigNumberish
+    _toTokenId: BigNumberish,
   ];
   export type OutputTuple = [_fromTokenId: bigint, _toTokenId: bigint];
   export interface OutputObject {
@@ -249,7 +249,7 @@ export namespace MintRequestedEvent {
   export type InputTuple = [
     tokenId: BigNumberish,
     minter: AddressLike,
-    seed: BigNumberish
+    seed: BigNumberish,
   ];
   export type OutputTuple = [tokenId: bigint, minter: string, seed: bigint];
   export interface OutputObject {
@@ -280,7 +280,7 @@ export namespace TransferEvent {
   export type InputTuple = [
     from: AddressLike,
     to: AddressLike,
-    tokenId: BigNumberish
+    tokenId: BigNumberish,
   ];
   export type OutputTuple = [from: string, to: string, tokenId: bigint];
   export interface OutputObject {
@@ -303,258 +303,258 @@ export interface AffixNFT extends BaseContract {
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
+    toBlock?: string | number | undefined,
   ): Promise<Array<TypedEventLog<TCEvent>>>;
   queryFilter<TCEvent extends TypedContractEvent>(
     filter: TypedDeferredTopicFilter<TCEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
+    toBlock?: string | number | undefined,
   ): Promise<Array<TypedEventLog<TCEvent>>>;
 
   on<TCEvent extends TypedContractEvent>(
     event: TCEvent,
-    listener: TypedListener<TCEvent>
+    listener: TypedListener<TCEvent>,
   ): Promise<this>;
   on<TCEvent extends TypedContractEvent>(
     filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
+    listener: TypedListener<TCEvent>,
   ): Promise<this>;
 
   once<TCEvent extends TypedContractEvent>(
     event: TCEvent,
-    listener: TypedListener<TCEvent>
+    listener: TypedListener<TCEvent>,
   ): Promise<this>;
   once<TCEvent extends TypedContractEvent>(
     filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
+    listener: TypedListener<TCEvent>,
   ): Promise<this>;
 
   listeners<TCEvent extends TypedContractEvent>(
-    event: TCEvent
+    event: TCEvent,
   ): Promise<Array<TypedListener<TCEvent>>>;
   listeners(eventName?: string): Promise<Array<Listener>>;
   removeAllListeners<TCEvent extends TypedContractEvent>(
-    event?: TCEvent
+    event?: TCEvent,
   ): Promise<this>;
 
   approve: TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
 
-  balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+  balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], 'view'>;
 
-  getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+  getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], 'view'>;
 
   isApprovedForAll: TypedContractMethod<
     [owner: AddressLike, operator: AddressLike],
     [boolean],
-    "view"
+    'view'
   >;
 
-  mint: TypedContractMethod<[], [void], "payable">;
+  mint: TypedContractMethod<[], [void], 'payable'>;
 
-  name: TypedContractMethod<[], [string], "view">;
+  name: TypedContractMethod<[], [string], 'view'>;
 
-  owner: TypedContractMethod<[], [string], "view">;
+  owner: TypedContractMethod<[], [string], 'view'>;
 
-  ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+  ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], 'view'>;
 
-  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+  renounceOwnership: TypedContractMethod<[], [void], 'nonpayable'>;
 
-  "safeTransferFrom(address,address,uint256)": TypedContractMethod<
+  'safeTransferFrom(address,address,uint256)': TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
 
-  "safeTransferFrom(address,address,uint256,bytes)": TypedContractMethod<
+  'safeTransferFrom(address,address,uint256,bytes)': TypedContractMethod<
     [
       from: AddressLike,
       to: AddressLike,
       tokenId: BigNumberish,
-      data: BytesLike
+      data: BytesLike,
     ],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
 
   setApprovalForAll: TypedContractMethod<
     [operator: AddressLike, approved: boolean],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
 
   setTokenURI: TypedContractMethod<
     [tokenId: BigNumberish, uri: string],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
 
   supportsInterface: TypedContractMethod<
     [interfaceId: BytesLike],
     [boolean],
-    "view"
+    'view'
   >;
 
-  symbol: TypedContractMethod<[], [string], "view">;
+  symbol: TypedContractMethod<[], [string], 'view'>;
 
-  tokenURI: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+  tokenURI: TypedContractMethod<[tokenId: BigNumberish], [string], 'view'>;
 
-  totalMinted: TypedContractMethod<[], [bigint], "view">;
+  totalMinted: TypedContractMethod<[], [bigint], 'view'>;
 
   transferFrom: TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
 
   transferOwnership: TypedContractMethod<
     [newOwner: AddressLike],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
 
   getFunction<T extends ContractMethod = ContractMethod>(
-    key: string | FunctionFragment
+    key: string | FunctionFragment,
   ): T;
 
   getFunction(
-    nameOrSignature: "approve"
+    nameOrSignature: 'approve',
   ): TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
   getFunction(
-    nameOrSignature: "balanceOf"
-  ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
+    nameOrSignature: 'balanceOf',
+  ): TypedContractMethod<[owner: AddressLike], [bigint], 'view'>;
   getFunction(
-    nameOrSignature: "getApproved"
-  ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+    nameOrSignature: 'getApproved',
+  ): TypedContractMethod<[tokenId: BigNumberish], [string], 'view'>;
   getFunction(
-    nameOrSignature: "isApprovedForAll"
+    nameOrSignature: 'isApprovedForAll',
   ): TypedContractMethod<
     [owner: AddressLike, operator: AddressLike],
     [boolean],
-    "view"
+    'view'
   >;
   getFunction(
-    nameOrSignature: "mint"
-  ): TypedContractMethod<[], [void], "payable">;
+    nameOrSignature: 'mint',
+  ): TypedContractMethod<[], [void], 'payable'>;
   getFunction(
-    nameOrSignature: "name"
-  ): TypedContractMethod<[], [string], "view">;
+    nameOrSignature: 'name',
+  ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
-    nameOrSignature: "owner"
-  ): TypedContractMethod<[], [string], "view">;
+    nameOrSignature: 'owner',
+  ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
-    nameOrSignature: "ownerOf"
-  ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+    nameOrSignature: 'ownerOf',
+  ): TypedContractMethod<[tokenId: BigNumberish], [string], 'view'>;
   getFunction(
-    nameOrSignature: "renounceOwnership"
-  ): TypedContractMethod<[], [void], "nonpayable">;
+    nameOrSignature: 'renounceOwnership',
+  ): TypedContractMethod<[], [void], 'nonpayable'>;
   getFunction(
-    nameOrSignature: "safeTransferFrom(address,address,uint256)"
+    nameOrSignature: 'safeTransferFrom(address,address,uint256)',
   ): TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
   getFunction(
-    nameOrSignature: "safeTransferFrom(address,address,uint256,bytes)"
+    nameOrSignature: 'safeTransferFrom(address,address,uint256,bytes)',
   ): TypedContractMethod<
     [
       from: AddressLike,
       to: AddressLike,
       tokenId: BigNumberish,
-      data: BytesLike
+      data: BytesLike,
     ],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
   getFunction(
-    nameOrSignature: "setApprovalForAll"
+    nameOrSignature: 'setApprovalForAll',
   ): TypedContractMethod<
     [operator: AddressLike, approved: boolean],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
   getFunction(
-    nameOrSignature: "setTokenURI"
+    nameOrSignature: 'setTokenURI',
   ): TypedContractMethod<
     [tokenId: BigNumberish, uri: string],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
   getFunction(
-    nameOrSignature: "supportsInterface"
-  ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
+    nameOrSignature: 'supportsInterface',
+  ): TypedContractMethod<[interfaceId: BytesLike], [boolean], 'view'>;
   getFunction(
-    nameOrSignature: "symbol"
-  ): TypedContractMethod<[], [string], "view">;
+    nameOrSignature: 'symbol',
+  ): TypedContractMethod<[], [string], 'view'>;
   getFunction(
-    nameOrSignature: "tokenURI"
-  ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
+    nameOrSignature: 'tokenURI',
+  ): TypedContractMethod<[tokenId: BigNumberish], [string], 'view'>;
   getFunction(
-    nameOrSignature: "totalMinted"
-  ): TypedContractMethod<[], [bigint], "view">;
+    nameOrSignature: 'totalMinted',
+  ): TypedContractMethod<[], [bigint], 'view'>;
   getFunction(
-    nameOrSignature: "transferFrom"
+    nameOrSignature: 'transferFrom',
   ): TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
     [void],
-    "nonpayable"
+    'nonpayable'
   >;
   getFunction(
-    nameOrSignature: "transferOwnership"
-  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+    nameOrSignature: 'transferOwnership',
+  ): TypedContractMethod<[newOwner: AddressLike], [void], 'nonpayable'>;
 
   getEvent(
-    key: "Approval"
+    key: 'Approval',
   ): TypedContractEvent<
     ApprovalEvent.InputTuple,
     ApprovalEvent.OutputTuple,
     ApprovalEvent.OutputObject
   >;
   getEvent(
-    key: "ApprovalForAll"
+    key: 'ApprovalForAll',
   ): TypedContractEvent<
     ApprovalForAllEvent.InputTuple,
     ApprovalForAllEvent.OutputTuple,
     ApprovalForAllEvent.OutputObject
   >;
   getEvent(
-    key: "BatchMetadataUpdate"
+    key: 'BatchMetadataUpdate',
   ): TypedContractEvent<
     BatchMetadataUpdateEvent.InputTuple,
     BatchMetadataUpdateEvent.OutputTuple,
     BatchMetadataUpdateEvent.OutputObject
   >;
   getEvent(
-    key: "MetadataUpdate"
+    key: 'MetadataUpdate',
   ): TypedContractEvent<
     MetadataUpdateEvent.InputTuple,
     MetadataUpdateEvent.OutputTuple,
     MetadataUpdateEvent.OutputObject
   >;
   getEvent(
-    key: "MintRequested"
+    key: 'MintRequested',
   ): TypedContractEvent<
     MintRequestedEvent.InputTuple,
     MintRequestedEvent.OutputTuple,
     MintRequestedEvent.OutputObject
   >;
   getEvent(
-    key: "OwnershipTransferred"
+    key: 'OwnershipTransferred',
   ): TypedContractEvent<
     OwnershipTransferredEvent.InputTuple,
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
-    key: "Transfer"
+    key: 'Transfer',
   ): TypedContractEvent<
     TransferEvent.InputTuple,
     TransferEvent.OutputTuple,
@@ -562,7 +562,7 @@ export interface AffixNFT extends BaseContract {
   >;
 
   filters: {
-    "Approval(address,address,uint256)": TypedContractEvent<
+    'Approval(address,address,uint256)': TypedContractEvent<
       ApprovalEvent.InputTuple,
       ApprovalEvent.OutputTuple,
       ApprovalEvent.OutputObject
@@ -573,7 +573,7 @@ export interface AffixNFT extends BaseContract {
       ApprovalEvent.OutputObject
     >;
 
-    "ApprovalForAll(address,address,bool)": TypedContractEvent<
+    'ApprovalForAll(address,address,bool)': TypedContractEvent<
       ApprovalForAllEvent.InputTuple,
       ApprovalForAllEvent.OutputTuple,
       ApprovalForAllEvent.OutputObject
@@ -584,7 +584,7 @@ export interface AffixNFT extends BaseContract {
       ApprovalForAllEvent.OutputObject
     >;
 
-    "BatchMetadataUpdate(uint256,uint256)": TypedContractEvent<
+    'BatchMetadataUpdate(uint256,uint256)': TypedContractEvent<
       BatchMetadataUpdateEvent.InputTuple,
       BatchMetadataUpdateEvent.OutputTuple,
       BatchMetadataUpdateEvent.OutputObject
@@ -595,7 +595,7 @@ export interface AffixNFT extends BaseContract {
       BatchMetadataUpdateEvent.OutputObject
     >;
 
-    "MetadataUpdate(uint256)": TypedContractEvent<
+    'MetadataUpdate(uint256)': TypedContractEvent<
       MetadataUpdateEvent.InputTuple,
       MetadataUpdateEvent.OutputTuple,
       MetadataUpdateEvent.OutputObject
@@ -606,7 +606,7 @@ export interface AffixNFT extends BaseContract {
       MetadataUpdateEvent.OutputObject
     >;
 
-    "MintRequested(uint256,address,uint256)": TypedContractEvent<
+    'MintRequested(uint256,address,uint256)': TypedContractEvent<
       MintRequestedEvent.InputTuple,
       MintRequestedEvent.OutputTuple,
       MintRequestedEvent.OutputObject
@@ -617,7 +617,7 @@ export interface AffixNFT extends BaseContract {
       MintRequestedEvent.OutputObject
     >;
 
-    "OwnershipTransferred(address,address)": TypedContractEvent<
+    'OwnershipTransferred(address,address)': TypedContractEvent<
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
@@ -628,7 +628,7 @@ export interface AffixNFT extends BaseContract {
       OwnershipTransferredEvent.OutputObject
     >;
 
-    "Transfer(address,address,uint256)": TypedContractEvent<
+    'Transfer(address,address,uint256)': TypedContractEvent<
       TransferEvent.InputTuple,
       TransferEvent.OutputTuple,
       TransferEvent.OutputObject

@@ -25,7 +25,6 @@ The private key for the wallet that deploys the contract and calls `setTokenURI`
    Alternatively, export the private key from MetaMask: Account Details → Show Private Key.
 
 2. **Fund it with Sepolia ETH.** Free testnet ETH from a faucet:
-
    - [alchemy.com/faucets/ethereum-sepolia](https://alchemy.com/faucets/ethereum-sepolia)
    - [sepolia-faucet.pk910.de](https://sepolia-faucet.pk910.de) (PoW faucet, no login)
 
@@ -33,9 +32,9 @@ The private key for the wallet that deploys the contract and calls `setTokenURI`
 
 3. **Deploy the contract from this wallet.** After funding:
 
-    ```bash
-    pnpm nx run contracts:deploy -- --network sepolia
-    ```
+   ```bash
+   pnpm nx run contracts:deploy -- --network sepolia
+   ```
 
    This wallet becomes the contract `owner`, authorized to call `setTokenURI`.
 

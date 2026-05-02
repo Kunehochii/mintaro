@@ -6,7 +6,10 @@
   "nx": {
     "targets": {
       "build": {
-        "dependsOn": ["^build", "contracts:compile"]
+        "dependsOn": [
+          "^build",
+          "contracts:compile"
+        ]
       }
     }
   },

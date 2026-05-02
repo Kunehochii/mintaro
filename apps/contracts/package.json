@@ -50,7 +50,9 @@
       },
       "deploy": {
         "executor": "nx:run-commands",
-        "dependsOn": ["compile"],
+        "dependsOn": [
+          "compile"
+        ],
         "options": {
           "cwd": "apps/contracts",
           "command": "npx hardhat run scripts/deploy.ts"

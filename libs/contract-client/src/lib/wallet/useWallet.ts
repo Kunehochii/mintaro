@@ -18,8 +18,9 @@ export interface WalletState {
 
 function getEthereum(): MetaMaskProvider | undefined {
   if (typeof window === 'undefined') return undefined;
-  return (window as unknown as Record<string, unknown>)
-    .ethereum as MetaMaskProvider | undefined;
+  return (window as unknown as Record<string, unknown>).ethereum as
+    | MetaMaskProvider
+    | undefined;
 }
 
 export function useWallet(): WalletState {
@@ -30,7 +31,8 @@ export function useWallet(): WalletState {
   const [signer, setSigner] = useState<JsonRpcSigner | null>(null);
 
   const ethereum = getEthereum();
-  const isMetaMaskInstalled = typeof window !== 'undefined' && Boolean(ethereum?.isMetaMask);
+  const isMetaMaskInstalled =
+    typeof window !== 'undefined' && Boolean(ethereum?.isMetaMask);
   const isConnected = address !== null && chainId !== null;
   const isCorrectNetwork = chainId === SEPOLIA_CHAIN_CONFIG.chainId;
 
@@ -120,7 +122,9 @@ export function useWallet(): WalletState {
           ]);
         } catch (addErr: unknown) {
           setError(
-            addErr instanceof Error ? addErr.message : 'Failed to add Sepolia network'
+            addErr instanceof Error
+              ? addErr.message
+              : 'Failed to add Sepolia network',
           );
         }
       } else {

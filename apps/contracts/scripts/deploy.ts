@@ -13,7 +13,9 @@ interface Deployment {
 async function main() {
   const [deployer] = await ethers.getSigners();
   console.log(`\nDeployer: ${deployer.address}`);
-  console.log(`Network:  ${network.name} (chainId: ${network.config.chainId})\n`);
+  console.log(
+    `Network:  ${network.name} (chainId: ${network.config.chainId})\n`,
+  );
 
   const deploymentsDir = path.join(__dirname, '..', 'deployments');
   const deployFile = path.join(deploymentsDir, `${network.name}.json`);
@@ -22,12 +24,14 @@ async function main() {
     const prev: Deployment = JSON.parse(fs.readFileSync(deployFile, 'utf8'));
     const code = await ethers.provider.getCode(prev.address);
     if (code !== '0x') {
-      console.log(`Contract already deployed at ${prev.address} (tx: ${prev.txHash})`);
+      console.log(
+        `Contract already deployed at ${prev.address} (tx: ${prev.txHash})`,
+      );
       console.log(`Reusing existing deployment.`);
       return;
     }
     console.log(
-      `Stale deployment file found (no bytecode at ${prev.address}). Redeploying...`
+      `Stale deployment file found (no bytecode at ${prev.address}). Redeploying...`,
     );
   }
 
@@ -40,7 +44,8 @@ async function main() {
   const txResponse = deployed.deploymentTransaction();
   if (!txResponse) throw new Error('No deployment transaction returned');
   const receipt = await txResponse.wait();
-  if (!receipt) throw new Error('No receipt returned for deployment transaction');
+  if (!receipt)
+    throw new Error('No receipt returned for deployment transaction');
   const blockNumber = receipt.blockNumber;
   const txHash = txResponse.hash;
 

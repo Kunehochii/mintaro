@@ -3,20 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --vapor-pink: #FF71CE;
-  --vapor-cyan: #01CDFE;
-  --vapor-mint: #05FFA1;
-  --vapor-purple: #B967FF;
-  --vapor-gold: #FBBF24;
-  --vapor-bg: #0F0F23;
-  --vapor-surface: #1A1A2E;
-  --vapor-text: #F8FAFC;
-  --vapor-muted: #94A3B8;
+  --vapor-pink: #ff71ce;
+  --vapor-cyan: #01cdfe;
+  --vapor-mint: #05ffa1;
+  --vapor-purple: #b967ff;
+  --vapor-gold: #fbbf24;
+  --vapor-bg: #0f0f23;
+  --vapor-surface: #1a1a2e;
+  --vapor-text: #f8fafc;
+  --vapor-muted: #94a3b8;
 
-  --glow-pink: 0 0 12px #FF71CE, 0 0 24px #FF71CE40;
-  --glow-cyan: 0 0 12px #01CDFE, 0 0 24px #01CDFE40;
-  --glow-purple: 0 0 12px #B967FF, 0 0 24px #B967FF40;
-  --glow-gold: 0 0 12px #FBBF24, 0 0 24px #FBBF2440;
+  --glow-pink: 0 0 12px #ff71ce, 0 0 24px #ff71ce40;
+  --glow-cyan: 0 0 12px #01cdfe, 0 0 24px #01cdfe40;
+  --glow-purple: 0 0 12px #b967ff, 0 0 24px #b967ff40;
+  --glow-gold: 0 0 12px #fbbf24, 0 0 24px #fbbf2440;
 
   --radius-card: 12px;
   --radius-btn: 8px;
@@ -29,7 +29,12 @@
     line-height: 1.6;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     line-height: 1.2;
   }
 }
@@ -52,16 +57,24 @@
 
 /* Glow text utilities (text-shadow can't be done via Tailwind without plugin) */
 .glow-text-pink {
-  text-shadow: 0 0 10px #FF71CE, 0 0 20px #FF71CE80;
+  text-shadow:
+    0 0 10px #ff71ce,
+    0 0 20px #ff71ce80;
 }
 .glow-text-cyan {
-  text-shadow: 0 0 10px #01CDFE, 0 0 20px #01CDFE80;
+  text-shadow:
+    0 0 10px #01cdfe,
+    0 0 20px #01cdfe80;
 }
 .glow-text-purple {
-  text-shadow: 0 0 10px #B967FF, 0 0 20px #B967FF80;
+  text-shadow:
+    0 0 10px #b967ff,
+    0 0 20px #b967ff80;
 }
 .glow-text-gold {
-  text-shadow: 0 0 10px #FBBF24, 0 0 20px #FBBF2480;
+  text-shadow:
+    0 0 10px #fbbf24,
+    0 0 20px #fbbf2480;
 }
 
 /* Respect reduced motion */

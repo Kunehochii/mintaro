@@ -38,9 +38,7 @@ export default function WalletConnect() {
         >
           Connect
         </button>
-        {error && (
-          <p className="font-mono text-xs text-red-400">{error}</p>
-        )}
+        {error && <p className="font-mono text-xs text-red-400">{error}</p>}
       </div>
     );
   }
@@ -56,9 +54,7 @@ export default function WalletConnect() {
         >
           Switch to Sepolia
         </button>
-        {error && (
-          <p className="font-mono text-xs text-red-400">{error}</p>
-        )}
+        {error && <p className="font-mono text-xs text-red-400">{error}</p>}
       </div>
     );
   }
@@ -71,9 +67,7 @@ export default function WalletConnect() {
           {truncateAddress(address)}
         </span>
       )}
-      {error && (
-        <p className="font-mono text-xs text-red-400">{error}</p>
-      )}
+      {error && <p className="font-mono text-xs text-red-400">{error}</p>}
     </div>
   );
 }
