@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "tslib": "^2.3.0",
-    "@org/shared-types": "workspace:*"
+    "@org/shared-types": "workspace:*",
+    "ethers": "^6.13.0"
   },
   "peerDependencies": {
     "react": "^19.0.0"
