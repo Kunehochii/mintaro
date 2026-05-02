@@ -186,6 +186,15 @@ importers:
 
   apps/web:
     dependencies:
+      '@org/contract-client':
+        specifier: workspace:*
+        version: link:../../libs/contract-client
+      '@org/shared-types':
+        specifier: workspace:*
+        version: link:../../libs/shared-types
+      ethers:
+        specifier: ^6.13.0
+        version: 6.16.0
       next:
         specifier: ~16.1.6
         version: 16.1.7(@babel/core@7.29.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(sass@1.99.0)
@@ -195,6 +204,21 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.5(react@19.2.5)
+
+  libs/contract-client:
+    dependencies:
+      '@org/shared-types':
+        specifier: workspace:*
+        version: link:../shared-types
+      ethers:
+        specifier: ^6.13.0
+        version: 6.16.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.5
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
 
   libs/shared-types:
     dependencies:

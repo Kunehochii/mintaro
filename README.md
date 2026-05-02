@@ -89,6 +89,8 @@ pnpm nx run contracts:test      # Run Hardhat tests
 | `pnpm nx run contracts:compile` | Compile Solidity contracts |
 | `pnpm nx run contracts:test` | Run Hardhat test suite |
 | `pnpm nx run contracts:lint` | Lint contract code |
+| `pnpm nx run contracts:deploy` | Deploy contracts to a network |
+| `pnpm nx run contracts:verify` | Verify deployed contract source |
 | `pnpm nx run shared-types:build` | Build shared types library |
 
 ## Vercel Deployment
@@ -115,6 +117,12 @@ The relayer API routes under `apps/web/src/app/api/` will use the server-side en
 | Contract | Sepolia Address |
 |----------|----------------|
 | AffixNFT | `TBD` |
+
+The deployment address is stored in `apps/contracts/deployments/sepolia.json`. After deploying, copy the `address` field into `.env.local` as `NEXT_PUBLIC_CONTRACT_ADDRESS`.
+
+```bash
+pnpm nx run contracts:deploy -- --network sepolia
+```
 
 ## Team
 

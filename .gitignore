@@ -58,4 +58,5 @@ libs/shared-types/src/generated
 
 test-output
 
+.env.local
 .env

@@ -1,0 +1,6 @@
+# Compilation artifacts (already covered by root .gitignore, listed here for clarity)
+cache/
+artifacts/
+
+# Deployment history is committed intentionally — it is the source of truth for deployed addresses
+!deployments/
