@@ -1,6 +1,7 @@
 import { Readable } from 'node:stream';
 import PinataSDK from '@pinata/sdk';
 import { Rarity } from '@org/shared-types';
+import { ipfsGateway } from '@org/contract-client';
 
 let pinata: PinataSDK | null = null;
 
@@ -15,19 +16,38 @@ function getPinata(): PinataSDK {
   return pinata;
 }
 
+const DOWNLOAD_MAX_RETRIES = 3;
+
 async function downloadImage(url: string): Promise<Buffer> {
   if (url.startsWith('data:')) {
     const base64 = url.split(',')[1];
     return Buffer.from(base64, 'base64');
   }
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(
-      `Failed to download image from ${url}: ${response.status} ${response.statusText}`,
-    );
+
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= DOWNLOAD_MAX_RETRIES; attempt++) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        const isTransient = response.status >= 500 || response.status === 429;
+        if (!isTransient) {
+          throw new Error(
+            `Failed to download image from ${url}: ${response.status} ${response.statusText}`,
+          );
+        }
+        throw new Error(`Transient error ${response.status}`);
+      }
+      const arrayBuffer = await response.arrayBuffer();
+      return Buffer.from(arrayBuffer);
+    } catch (error) {
+      lastError = error;
+      if (attempt < DOWNLOAD_MAX_RETRIES) {
+        const delay = 1000 * 2 ** attempt;
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
   }
-  const arrayBuffer = await response.arrayBuffer();
-  return Buffer.from(arrayBuffer);
+  throw lastError;
 }
 
 function buildMetadata(tokenId: number, affixes: Rarity[], imageCid: string) {
@@ -48,6 +68,7 @@ export async function pinImageAndMetadata(
   affixes: Rarity[],
 ): Promise<string> {
   const client = getPinata();
+  const gateway = ipfsGateway();
 
   await client.testAuthentication().catch((err: Error) => {
     throw new Error(`Pinata authentication failed: ${err.message}`);
@@ -62,7 +83,7 @@ export async function pinImageAndMetadata(
 
   const imageCid = imageResult.IpfsHash;
 
-  const fetched = await fetch(`https://gateway.pinata.cloud/ipfs/${imageCid}`);
+  const fetched = await fetch(`${gateway}${imageCid}`);
   if (!fetched.ok) {
     throw new Error(`Failed to verify pinned image at ${imageCid}`);
   }
@@ -74,9 +95,7 @@ export async function pinImageAndMetadata(
 
   const metadataCid = metadataResult.IpfsHash;
 
-  const metadataFetched = await fetch(
-    `https://gateway.pinata.cloud/ipfs/${metadataCid}`,
-  );
+  const metadataFetched = await fetch(`${gateway}${metadataCid}`);
   if (!metadataFetched.ok) {
     throw new Error(`Failed to verify pinned metadata at ${metadataCid}`);
   }

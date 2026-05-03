@@ -1,33 +1,8 @@
-import {
-  createPublicClient,
-  http,
-  parseAbiItem,
-  type Address,
-  type Log,
-} from 'viem';
 import { getTokenURI } from '@/lib/reveal/relayer';
 import { revealPipeline } from '@/lib/reveal/pipeline';
+import { findMintRequested } from '@/lib/reveal/events';
 
-interface MintRequestedLog {
-  eventName: 'MintRequested';
-  args: {
-    tokenId: bigint;
-    minter: Address;
-    seed: bigint;
-  };
-}
-
-function getPublicClient() {
-  const rpcUrl = process.env.SEPOLIA_RPC_URL;
-  if (!rpcUrl) throw new Error('SEPOLIA_RPC_URL is not set');
-  return createPublicClient({ transport: http(rpcUrl) });
-}
-
-function getContractAddress(): Address {
-  const addr = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-  if (!addr) throw new Error('NEXT_PUBLIC_CONTRACT_ADDRESS is not set');
-  return addr as Address;
-}
+type Address = `0x${string}`;
 
 export async function POST(request: Request) {
   try {
@@ -67,20 +42,7 @@ export async function POST(request: Request) {
       });
     }
 
-    const client = getPublicClient();
-    const contractAddress = getContractAddress();
-
-    const logs = (await client.getLogs({
-      address: contractAddress,
-      event: parseAbiItem(
-        'event MintRequested(uint256 indexed tokenId, address indexed minter, uint256 seed)',
-      ),
-      fromBlock: 0n,
-      toBlock: 'latest',
-      args: {
-        tokenId: BigInt(tokenId),
-      },
-    })) as unknown as (Log & MintRequestedLog)[];
+    const logs = await findMintRequested(tokenId);
 
     if (logs.length === 0) {
       return Response.json(
@@ -93,7 +55,7 @@ export async function POST(request: Request) {
     const result = await revealPipeline(
       tokenId,
       mintEvent.args.seed,
-      mintEvent.args.minter,
+      mintEvent.args.minter as Address,
     );
 
     if (result.success) {

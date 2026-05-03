@@ -1,6 +1,12 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { Contract, type JsonRpcSigner, Interface, formatEther } from 'ethers';
+import {
+  Contract,
+  type JsonRpcSigner,
+  JsonRpcProvider,
+  formatEther,
+} from 'ethers';
 import { AffixNFT__factory } from '@org/shared-types';
+import { ipfsGateway } from '../gallery/constants.js';
 
 export interface AffixEntry {
   trait_type: string;
@@ -153,9 +159,6 @@ export function useAffixNFT(
 
   const resolveTokenUri = useCallback(
     async (tokenId: number, txHash: string | null, skipAnimation: boolean) => {
-      const iface = new Interface([
-        'function tokenURI(uint256 tokenId) view returns (string)',
-      ]);
       const rpcUrl = getRpcUrl();
       const startTime = Date.now();
 
@@ -163,27 +166,19 @@ export function useAffixNFT(
         pollRef.current = setInterval(async () => {
           try {
             if (!contractAddress) return;
-            const data = iface.encodeFunctionData('tokenURI', [tokenId]);
-            const res = await fetch(rpcUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                jsonrpc: '2.0',
-                method: 'eth_call',
-                params: [{ to: contractAddress, data }, 'latest'],
-                id: 1,
-              }),
-            });
-            const json = await res.json();
-            if (json.error) return;
-            const decoded = iface.decodeFunctionResult('tokenURI', json.result);
-            const uri: string = decoded[0];
+            const provider = new JsonRpcProvider(rpcUrl);
+            const contract = AffixNFT__factory.connect(
+              contractAddress,
+              provider,
+            );
+            const uri = await contract.tokenURI(BigInt(tokenId));
             if (uri && uri !== '') {
               if (pollRef.current) clearInterval(pollRef.current);
               pollRef.current = null;
 
+              const gateway = ipfsGateway();
               const cid = uri.replace('ipfs://', '');
-              const metadataUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
+              const metadataUrl = `${gateway}${cid}`;
 
               try {
                 const metaRes = await fetch(metadataUrl);
@@ -193,9 +188,7 @@ export function useAffixNFT(
                   attributes?: AffixEntry[];
                 } = await metaRes.json();
                 const imageCid = metadata.image?.replace('ipfs://', '');
-                const imageUrl = imageCid
-                  ? `https://gateway.pinata.cloud/ipfs/${imageCid}`
-                  : null;
+                const imageUrl = imageCid ? `${gateway}${imageCid}` : null;
                 const affixes = metadata.attributes ?? [];
 
                 const animationPlayed = skipAnimation
@@ -325,32 +318,18 @@ export function useAffixNFT(
     async (tokenId: number) => {
       if (!contractAddress) return;
       const rpcUrl = getRpcUrl();
-      const iface = new Interface([
-        'function tokenURI(uint256 tokenId) view returns (string)',
-      ]);
 
       try {
-        const data = iface.encodeFunctionData('tokenURI', [tokenId]);
-        const res = await fetch(rpcUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            method: 'eth_call',
-            params: [{ to: contractAddress, data }, 'latest'],
-            id: 1,
-          }),
-        });
-        const json = await res.json();
-        if (json.error) return;
-        const decoded = iface.decodeFunctionResult('tokenURI', json.result);
-        const uri: string = decoded[0];
+        const provider = new JsonRpcProvider(rpcUrl);
+        const contract = AffixNFT__factory.connect(contractAddress, provider);
+        const uri = await contract.tokenURI(BigInt(tokenId));
 
         if (uri && uri !== '') {
           const alreadyPlayed = wasAnimationPlayed(tokenId);
+          const gateway = ipfsGateway();
 
           const cid = uri.replace('ipfs://', '');
-          const metadataUrl = `https://gateway.pinata.cloud/ipfs/${cid}`;
+          const metadataUrl = `${gateway}${cid}`;
           let imageUrl: string | null = null;
           let affixes: AffixEntry[] = [];
 
@@ -361,9 +340,7 @@ export function useAffixNFT(
               attributes?: AffixEntry[];
             } = await metaRes.json();
             const imageCid = metadata.image?.replace('ipfs://', '');
-            imageUrl = imageCid
-              ? `https://gateway.pinata.cloud/ipfs/${imageCid}`
-              : null;
+            imageUrl = imageCid ? `${gateway}${imageCid}` : null;
             affixes = metadata.attributes ?? [];
           } catch {
             // metadata not yet available

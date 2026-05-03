@@ -1,38 +1,42 @@
 import {
-  createPublicClient,
-  http,
-  parseAbiItem,
-  type Log,
-  type Address,
-} from 'viem';
-import {
   getLastProcessedBlock,
   setLastProcessedBlock,
 } from '@/lib/reveal/state';
 import { getTokenURI } from '@/lib/reveal/relayer';
 import { revealPipeline } from '@/lib/reveal/pipeline';
+import { getProvider, findMintRequestedRange } from '@/lib/reveal/events';
 
-const BATCH_SIZE = 100;
+type Address = `0x${string}`;
 
-function getPublicClient() {
-  const rpcUrl = process.env.SEPOLIA_RPC_URL;
-  if (!rpcUrl) throw new Error('SEPOLIA_RPC_URL is not set');
-  return createPublicClient({ transport: http(rpcUrl) });
-}
+const BATCH_SIZE = 10;
+const CONCURRENCY = 3;
 
-function getContractAddress(): Address {
-  const addr = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-  if (!addr) throw new Error('NEXT_PUBLIC_CONTRACT_ADDRESS is not set');
-  return addr as Address;
-}
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  fn: (item: T) => Promise<R>,
+): Promise<PromiseSettledResult<R>[]> {
+  const results: PromiseSettledResult<R>[] = new Array(items.length);
+  let cursor = 0;
 
-interface MintRequestedLog {
-  eventName: 'MintRequested';
-  args: {
-    tokenId: bigint;
-    minter: Address;
-    seed: bigint;
-  };
+  async function runNext(): Promise<void> {
+    while (cursor < items.length) {
+      const idx = cursor++;
+      try {
+        const value = await fn(items[idx]);
+        results[idx] = { status: 'fulfilled', value };
+      } catch (reason) {
+        results[idx] = { status: 'rejected', reason };
+      }
+    }
+  }
+
+  const workers = Array.from(
+    { length: Math.min(concurrency, items.length) },
+    () => runNext(),
+  );
+  await Promise.all(workers);
+  return results;
 }
 
 export async function GET(request: Request) {
@@ -49,18 +53,14 @@ export async function GET(request: Request) {
     const fromBlockParam = url.searchParams.get('fromBlock');
     const toBlockParam = url.searchParams.get('toBlock');
 
-    const client = getPublicClient();
-    const contractAddress = getContractAddress();
-    const latestBlock = await client.getBlockNumber({ cacheTime: 0 });
+    const provider = getProvider();
+    const latestBlock = BigInt(await provider.getBlockNumber());
 
-    // If a specific fromBlock is provided by the caller (e.g. the mint page passing the
-    // receipt block number), use it directly — bypasses stale last-block.json state.
     let fromBlock: bigint;
     if (fromBlockParam !== null) {
       fromBlock = BigInt(fromBlockParam);
     } else {
       const lastBlock = await getLastProcessedBlock();
-      // Guard: if persisted lastBlock is ahead of the chain (Hardhat restart), reset to 0
       const safeLastBlock = lastBlock > latestBlock ? 0n : lastBlock;
       fromBlock = safeLastBlock + 1n;
     }
@@ -82,44 +82,38 @@ export async function GET(request: Request) {
           ? latestBlock
           : fromBlock + BigInt(BATCH_SIZE);
 
-    const logs = (await client.getLogs({
-      address: contractAddress,
-      event: parseAbiItem(
-        'event MintRequested(uint256 indexed tokenId, address indexed minter, uint256 seed)',
-      ),
-      fromBlock,
-      toBlock,
-    })) as unknown as (Log & MintRequestedLog)[];
+    const logs = await findMintRequestedRange(fromBlock, toBlock);
 
-    for (const log of logs) {
+    const settled = await mapWithConcurrency(logs, CONCURRENCY, async (log) => {
       const tokenId = Number(log.args.tokenId);
 
-      try {
-        const existingUri = await getTokenURI(tokenId);
-        if (existingUri && existingUri !== '') {
-          results.push({ tokenId, success: true, skip: true });
-          continue;
-        }
+      const existingUri = await getTokenURI(tokenId);
+      if (existingUri && existingUri !== '') {
+        return { tokenId, success: true, skip: true } as const;
+      }
 
-        const result = await revealPipeline(
-          tokenId,
-          log.args.seed,
-          log.args.minter,
-        );
+      const result = await revealPipeline(
+        tokenId,
+        log.args.seed,
+        log.args.minter as Address,
+      );
 
-        results.push({
-          tokenId,
-          success: result.success,
-          skip: result.skip,
-          error: result.error,
-          txHash: result.txHash,
-        });
-      } catch (error) {
-        results.push({
-          tokenId,
-          success: false,
-          error: error instanceof Error ? error.message : String(error),
-        });
+      return {
+        tokenId,
+        success: result.success,
+        skip: result.skip,
+        error: result.error,
+        txHash: result.txHash,
+      } as const;
+    });
+
+    for (const s of settled) {
+      if (s.status === 'fulfilled') {
+        results.push(s.value);
+      } else {
+        const err =
+          s.reason instanceof Error ? s.reason.message : String(s.reason);
+        results.push({ tokenId: -1, success: false, error: err });
       }
     }
 

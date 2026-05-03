@@ -33,9 +33,10 @@ export default function MintPage() {
     if (!Number.isFinite(tokenId) || tokenId < 0) return;
     setRetryResult({ ok: false, message: 'Retrying...' });
     try {
+      const adminSecret = process.env.NEXT_PUBLIC_REVEAL_ADMIN_SECRET ?? '';
       const res = await fetch(`/api/reveal/retry?tokenId=${tokenId}`, {
         method: 'POST',
-        headers: { 'x-admin-secret': 'mintaro-reveal-admin-secret' },
+        headers: { 'x-admin-secret': adminSecret },
       });
       const data = (await res.json()) as Record<string, unknown>;
 
@@ -194,45 +195,56 @@ export default function MintPage() {
               )}
             </div>
 
-            {/* Dev Tools */}
-            <div className="mt-4 border-t border-vapor-purple/10 pt-4">
-              <button
-                type="button"
-                onClick={() => setShowAdminRetry(!showAdminRetry)}
-                className="font-mono text-xs tracking-wider text-vapor-muted/40 hover:text-vapor-muted transition-colors uppercase"
-              >
-                Dev Tools
-              </button>
+            {/* Dev Tools — tree-shaken out of production bundles */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="mt-4 border-t border-vapor-purple/10 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAdminRetry(!showAdminRetry)}
+                  className="font-mono text-xs tracking-wider text-vapor-muted/40 hover:text-vapor-muted transition-colors uppercase"
+                >
+                  Dev Tools
+                </button>
 
-              {showAdminRetry && (
-                <div className="mt-3 rounded-card border border-vapor-purple/15 bg-vapor-surface/30 p-4">
-                  <div className="flex gap-3">
-                    <input
-                      type="number"
-                      placeholder="Token ID"
-                      value={retryTokenId}
-                      onChange={(e) => setRetryTokenId(e.target.value)}
-                      className="flex-1 rounded-btn border border-vapor-purple/20 bg-vapor-bg px-4 py-2 font-mono text-sm text-white placeholder:text-vapor-muted/50 focus:border-vapor-cyan focus:outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleAdminRetry}
-                      className="rounded-btn bg-vapor-purple/80 px-4 py-2 font-display text-xs uppercase text-white hover:bg-vapor-purple hover:shadow-glow-purple transition-all"
-                    >
-                      Retry
-                    </button>
+                {showAdminRetry && (
+                  <div className="mt-3 rounded-card border border-vapor-purple/15 bg-vapor-surface/30 p-4">
+                    {process.env.NEXT_PUBLIC_REVEAL_ADMIN_SECRET ? (
+                      <>
+                        <div className="flex gap-3">
+                          <input
+                            type="number"
+                            placeholder="Token ID"
+                            value={retryTokenId}
+                            onChange={(e) => setRetryTokenId(e.target.value)}
+                            className="flex-1 rounded-btn border border-vapor-purple/20 bg-vapor-bg px-4 py-2 font-mono text-sm text-white placeholder:text-vapor-muted/50 focus:border-vapor-cyan focus:outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleAdminRetry}
+                            className="rounded-btn bg-vapor-purple/80 px-4 py-2 font-display text-xs uppercase text-white hover:bg-vapor-purple hover:shadow-glow-purple transition-all"
+                          >
+                            Retry
+                          </button>
+                        </div>
+                        {retryResult && (
+                          <p
+                            className={`mt-3 font-mono text-xs ${retryResult.ok ? 'text-vapor-mint' : 'text-red-400'}`}
+                          >
+                            {retryResult.ok ? '\u2713 ' : '\u2717 '}
+                            {retryResult.message}
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <p className="font-mono text-xs text-vapor-muted">
+                        Admin retry not configured. Set
+                        NEXT_PUBLIC_REVEAL_ADMIN_SECRET in .env.local.
+                      </p>
+                    )}
                   </div>
-                  {retryResult && (
-                    <p
-                      className={`mt-3 font-mono text-xs ${retryResult.ok ? 'text-vapor-mint' : 'text-red-400'}`}
-                    >
-                      {retryResult.ok ? '\u2713 ' : '\u2717 '}
-                      {retryResult.message}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>
