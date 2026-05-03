@@ -20,6 +20,7 @@ export async function revealPipeline(
   tokenId: number,
   seed: bigint,
   minter: Address,
+  customSubject?: string,
 ): Promise<PipelineResult> {
   const existingUri = await getTokenURI(tokenId);
   if (existingUri && existingUri !== '') {
@@ -33,7 +34,11 @@ export async function revealPipeline(
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
       const subjectIndex = subjectIndexFromSeed(seed + BigInt(attempt));
-      const prompt = buildMintPrompt(affixes, Number(subjectIndex));
+      const prompt = buildMintPrompt(
+        affixes,
+        Number(subjectIndex),
+        customSubject,
+      );
 
       const imageUrl = await generateImage(prompt);
 
