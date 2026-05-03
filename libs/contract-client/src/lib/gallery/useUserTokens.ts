@@ -53,6 +53,8 @@ export function useUserTokens(): UseUserTokensResult {
   useEffect(() => {
     if (!address || !contract) {
       setTokens([]);
+      setLoading(false);
+      setError(null);
       return;
     }
     let cancelled = false;

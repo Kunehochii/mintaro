@@ -8,10 +8,7 @@ export { useAffixContract } from './lib/contract/useAffixContract.js';
 export { useUserTokens } from './lib/gallery/useUserTokens.js';
 export { useTokenMetadata } from './lib/gallery/useTokenMetadata.js';
 export { useTokenAffixes } from './lib/gallery/useTokenAffixes.js';
-export {
-  useGalleryRow,
-  useGalleryTokens,
-} from './lib/gallery/useGalleryTokens.js';
+export { useGalleryRow } from './lib/gallery/useGalleryTokens.js';
 export { rarityFromAffixes } from './lib/gallery/rarityFromAffixes.js';
 export { resolveIpfsUri } from './lib/gallery/ipfs.js';
 export {

@@ -9,7 +9,16 @@ export function ipfsGateway(): string {
 
 export function deploymentBlock(): number {
   const raw = process.env.NEXT_PUBLIC_DEPLOYMENT_BLOCK;
-  if (!raw) return 0;
+  if (!raw) {
+    throw new Error(
+      'NEXT_PUBLIC_DEPLOYMENT_BLOCK is not set. Configure it to the contract deployment block to avoid scanning logs from genesis.',
+    );
+  }
   const n = Number(raw);
-  return Number.isFinite(n) ? n : 0;
+  if (!Number.isFinite(n) || n < 0 || !Number.isInteger(n)) {
+    throw new Error(
+      `NEXT_PUBLIC_DEPLOYMENT_BLOCK must be a non-negative integer, got "${raw}".`,
+    );
+  }
+  return n;
 }

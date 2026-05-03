@@ -41,6 +41,7 @@ export function useTokenMetadata(
     if (!contract || tokenId === null) {
       setTokenURI(null);
       setMetadata(null);
+      setLoading(false);
       return;
     }
     let cancelled = false;
