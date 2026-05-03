@@ -47,6 +47,9 @@ Thumbs.db
 .claude/settings.local.json
 .nx/polygraph
 
+# Runtime state (relayer)
+apps/web/data/last-block.json
+
 # Next.js
 .next
 out
@@ -54,6 +57,8 @@ out
 # Hardhat
 apps/contracts/artifacts
 apps/contracts/cache
+apps/contracts/deployments/localhost.json
+apps/contracts/tsconfig.tsbuildinfo
 
 test-output
 
