@@ -11,3 +11,6 @@ export const RARITY_PROBABILITIES: Record<Rarity, number> = {
   [Rarity.Splendid]: 8,
   [Rarity.Divine]: 2,
 };
+
+/** Maximum number of affixes a single NFT can receive */
+export const MAX_AFFIXES = 3;
