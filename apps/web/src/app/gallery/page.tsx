@@ -6,17 +6,26 @@ export const metadata = {
 
 export default function GalleryPage() {
   return (
-    <section className="mx-auto max-w-7xl px-4 pb-20 pt-28">
-      <header className="mb-8 flex items-end justify-between">
-        <div>
-          <h1 className="font-display text-3xl uppercase tracking-wider text-vapor-text">
-            Your Collection
-          </h1>
-          <p className="mt-1 font-body text-sm text-vapor-muted">
-            All AffixNFTs currently held by your wallet.
-          </p>
-        </div>
+    <section className="relative mx-auto max-w-7xl px-4 pb-20 pt-24 sm:pt-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-56 overflow-hidden sm:h-64 lg:h-72"
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-vapor-pink/15 via-vapor-purple/8 to-transparent" />
+        <div className="absolute inset-0 bg-retro-grid bg-[length:40px_40px] [mask-image:linear-gradient(to_bottom,black_0%,black_55%,transparent_100%)]" />
+        <div className="absolute inset-x-0 top-[58%] h-px bg-gradient-to-r from-transparent via-vapor-cyan/70 to-transparent shadow-[0_0_12px_#01CDFE]" />
+      </div>
+
+      <header className="mb-8 sm:mb-12">
+        <h1 className="font-display text-3xl uppercase tracking-wider text-vapor-text sm:text-4xl lg:text-5xl">
+          Your{' '}
+          <span className="glow-text-pink text-vapor-pink">Collection</span>
+        </h1>
+        <p className="mt-3 max-w-prose font-body text-sm text-vapor-muted sm:text-base">
+          All AffixNFTs currently held by your wallet.
+        </p>
       </header>
+
       <GalleryClient />
     </section>
   );
