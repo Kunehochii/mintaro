@@ -98,12 +98,18 @@ export default function RevealCard({
     }
 
     if (imageUrl && animState === 'shimmer') {
-      const timer = setTimeout(() => setAnimState('reveal'), 100);
-      return () => clearTimeout(timer);
+      const img = new Image();
+      img.onload = () => setAnimState('reveal');
+      img.onerror = () => setAnimState('reveal');
+      img.src = imageUrl;
+      return () => {
+        img.onload = null;
+        img.onerror = null;
+      };
     }
 
     if (imageUrl && animState === 'reveal') {
-      const timer = setTimeout(() => setAnimState('done'), 600);
+      const timer = setTimeout(() => setAnimState('done'), 700);
       return () => clearTimeout(timer);
     }
 
@@ -113,48 +119,61 @@ export default function RevealCard({
   const isShimmer = animState === 'shimmer';
 
   return (
-    <div className="mt-4">
-      {/* Card */}
+    <div className="w-full">
+      {/* Card — fixed aspect-square container */}
       <div
-        className={`relative overflow-hidden rounded-card border transition-all duration-500 ${
+        className={`relative aspect-square w-full rounded-card border ${
           isShimmer
             ? 'border-vapor-purple/20 bg-vapor-surface/40'
             : restyle(affixes)
         }`}
+        style={{ perspective: '1000px' }}
       >
-        {isShimmer ? (
-          <div className="aspect-square">
+        {/* 3D flip container */}
+        <div
+          className="h-full w-full transition-transform duration-700"
+          style={{
+            transformStyle: 'preserve-3d',
+            transform: isShimmer ? 'rotateY(0deg)' : 'rotateY(180deg)',
+          }}
+        >
+          {/* Front face — shimmer / spinner */}
+          <div
+            className="absolute inset-0"
+            style={{ backfaceVisibility: 'hidden' }}
+          >
             <div className="h-full w-full animate-shimmer bg-[linear-gradient(90deg,transparent_0%,rgba(185,103,255,0.05)_25%,rgba(1,205,254,0.08)_50%,rgba(185,103,255,0.05)_75%,transparent_100%)] bg-[length:200%_100%]" />
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
               <div className="size-16 animate-spin rounded-full border-4 border-vapor-purple/20 border-t-vapor-mint" />
-              <p className="font-mono text-sm text-vapor-muted">
-                Revealing artwork...
+              <p className="px-4 text-center font-mono text-sm text-vapor-muted">
+                {imageUrl ? 'Forging your affix...' : 'Revealing artwork...'}
               </p>
             </div>
           </div>
-        ) : (
+
+          {/* Back face — image */}
           <div
-            className={`transition-all duration-500 ${
-              animState === 'reveal'
-                ? 'scale-95 opacity-0'
-                : 'scale-100 opacity-100'
-            }`}
+            className="absolute inset-0 rounded-card bg-vapor-surface/60"
+            style={{
+              backfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg)',
+            }}
           >
             {imageUrl ? (
               <img
                 src={imageUrl}
                 alt={`Affix #${tokenId}`}
-                className="w-full rounded-t-card"
+                className="h-full w-full rounded-card object-cover"
               />
             ) : (
-              <div className="flex aspect-square items-center justify-center bg-vapor-surface/60">
+              <div className="flex h-full items-center justify-center">
                 <p className="font-mono text-sm text-vapor-muted">
                   Image not available
                 </p>
               </div>
             )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Affix below the card */}
