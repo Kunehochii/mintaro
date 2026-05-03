@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { BrowserProvider, JsonRpcSigner } from 'ethers';
 import type { MetaMaskProvider } from './types.js';
-import { SEPOLIA_CHAIN_CONFIG } from '@org/shared-types';
+import { SEPOLIA_CHAIN_CONFIG, VALID_CHAIN_IDS } from '@org/shared-types';
 
 export interface WalletState {
   address: string | null;
@@ -32,7 +32,9 @@ export function useWallet(): WalletState {
   const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
 
   const isConnected = address !== null && chainId !== null;
-  const isCorrectNetwork = chainId === SEPOLIA_CHAIN_CONFIG.chainId;
+  const isCorrectNetwork =
+    chainId !== null &&
+    (VALID_CHAIN_IDS as readonly number[]).includes(chainId);
 
   useEffect(() => {
     const ethereum = getEthereum();
