@@ -10,6 +10,9 @@ function getAccounts(): string[] {
   return [key];
 }
 
+const relayerPrivateKey = process.env.RELAYER_PRIVATE_KEY;
+const sepoliaRpcUrl = process.env.SEPOLIA_RPC_URL;
+
 const config: HardhatUserConfig = {
   solidity: {
     version: '0.8.28',
@@ -17,12 +20,15 @@ const config: HardhatUserConfig = {
       evmVersion: 'cancun',
     },
   },
-  networks: {
-    sepolia: {
-      url: process.env.SEPOLIA_RPC_URL ?? '',
-      accounts: getAccounts(),
-    },
-  },
+  networks:
+    relayerPrivateKey && sepoliaRpcUrl
+      ? {
+          sepolia: {
+            url: sepoliaRpcUrl,
+            accounts: getAccounts(),
+          },
+        }
+      : {},
   etherscan: {
     apiKey: {
       sepolia: process.env.ETHERSCAN_API_KEY ?? '',

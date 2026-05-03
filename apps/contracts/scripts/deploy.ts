@@ -35,9 +35,14 @@ async function main() {
     );
   }
 
+  const initialMintPrice = process.env.INITIAL_MINT_PRICE_WEI
+    ? BigInt(process.env.INITIAL_MINT_PRICE_WEI)
+    : ethers.parseEther('0.001');
+
   console.log('Deploying AffixNFT...');
+  console.log(`   Mint price: ${initialMintPrice} wei`);
   const factory = await ethers.getContractFactory('AffixNFT');
-  const contract = await factory.deploy(deployer.address);
+  const contract = await factory.deploy(deployer.address, initialMintPrice);
   const deployed = await contract.waitForDeployment();
   const address = await contract.getAddress();
 
@@ -73,7 +78,7 @@ async function main() {
     try {
       await run('verify:verify', {
         address,
-        constructorArguments: [deployer.address],
+        constructorArguments: [deployer.address, initialMintPrice],
       });
       console.log('\x1b[32mContract verified on Etherscan!\x1b[0m');
     } catch (err: unknown) {

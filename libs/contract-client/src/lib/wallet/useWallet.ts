@@ -29,16 +29,17 @@ export function useWallet(): WalletState {
   const [error, setError] = useState<string | null>(null);
   const [provider, setProvider] = useState<BrowserProvider | null>(null);
   const [signer, setSigner] = useState<JsonRpcSigner | null>(null);
+  const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
 
-  const ethereum = getEthereum();
-  const isMetaMaskInstalled =
-    typeof window !== 'undefined' && Boolean(ethereum?.isMetaMask);
   const isConnected = address !== null && chainId !== null;
   const isCorrectNetwork =
     chainId !== null &&
     (VALID_CHAIN_IDS as readonly number[]).includes(chainId);
 
   useEffect(() => {
+    const ethereum = getEthereum();
+    setIsMetaMaskInstalled(Boolean(ethereum?.isMetaMask));
+
     if (!ethereum) return;
 
     const bp = new BrowserProvider(ethereum);
