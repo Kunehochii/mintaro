@@ -13,13 +13,13 @@
   "private": true,
   "pnpm": {
     "onlyBuiltDependencies": [
-      "keccak",
-      "secp256k1",
-      "esbuild",
-      "@swc/core",
-      "nx",
-      "sharp",
       "@parcel/watcher",
+      "@swc/core",
+      "esbuild",
+      "keccak",
+      "nx",
+      "secp256k1",
+      "sharp",
       "unrs-resolver"
     ]
   },
