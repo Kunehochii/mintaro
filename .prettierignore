@@ -5,3 +5,6 @@
 /.nx/workspace-data
 *.swcrc
 pnpm-lock.yaml
+# Auto-generated files
+libs/shared-types/src/generated/
+**/next-env.d.ts
