@@ -59,6 +59,7 @@ export interface AffixNFTInterface extends Interface {
       | "BatchMetadataUpdate"
       | "Fused"
       | "MetadataUpdate"
+      | "MintPriceUpdated"
       | "MintRequested"
       | "OwnershipTransferred"
       | "TokenRevealed"
@@ -306,6 +307,19 @@ export namespace MetadataUpdateEvent {
   export type OutputTuple = [_tokenId: bigint];
   export interface OutputObject {
     _tokenId: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace MintPriceUpdatedEvent {
+  export type InputTuple = [oldPrice: BigNumberish, newPrice: BigNumberish];
+  export type OutputTuple = [oldPrice: bigint, newPrice: bigint];
+  export interface OutputObject {
+    oldPrice: bigint;
+    newPrice: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -659,6 +673,13 @@ export interface AffixNFT extends BaseContract {
     MetadataUpdateEvent.OutputObject
   >;
   getEvent(
+    key: "MintPriceUpdated"
+  ): TypedContractEvent<
+    MintPriceUpdatedEvent.InputTuple,
+    MintPriceUpdatedEvent.OutputTuple,
+    MintPriceUpdatedEvent.OutputObject
+  >;
+  getEvent(
     key: "MintRequested"
   ): TypedContractEvent<
     MintRequestedEvent.InputTuple,
@@ -752,6 +773,17 @@ export interface AffixNFT extends BaseContract {
       MetadataUpdateEvent.InputTuple,
       MetadataUpdateEvent.OutputTuple,
       MetadataUpdateEvent.OutputObject
+    >;
+
+    "MintPriceUpdated(uint256,uint256)": TypedContractEvent<
+      MintPriceUpdatedEvent.InputTuple,
+      MintPriceUpdatedEvent.OutputTuple,
+      MintPriceUpdatedEvent.OutputObject
+    >;
+    MintPriceUpdated: TypedContractEvent<
+      MintPriceUpdatedEvent.InputTuple,
+      MintPriceUpdatedEvent.OutputTuple,
+      MintPriceUpdatedEvent.OutputObject
     >;
 
     "MintRequested(uint256,address,uint256)": TypedContractEvent<

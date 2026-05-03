@@ -24,6 +24,7 @@ contract AffixNFT is ERC721URIStorage, Ownable {
   mapping(uint256 tokenId => bool revealed) private _tokenUriRevealed;
 
   event MintRequested(uint256 indexed tokenId, address indexed minter, uint256 seed);
+  event MintPriceUpdated(uint256 oldPrice, uint256 newPrice);
   event AffixesAssigned(uint256 indexed tokenId, uint8[] affixes);
   event TokenRevealed(uint256 indexed tokenId, string uri);
   event Fused(uint256[5] burnedTokenIds, uint256 indexed newTokenId, address indexed minter);
@@ -60,7 +61,9 @@ contract AffixNFT is ERC721URIStorage, Ownable {
   }
 
   function setMintPrice(uint256 newPrice) external onlyOwner {
+    uint256 oldPrice = mintPrice;
     mintPrice = newPrice;
+    emit MintPriceUpdated(oldPrice, newPrice);
   }
 
   /**

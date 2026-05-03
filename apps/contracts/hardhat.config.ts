@@ -2,6 +2,14 @@ import type { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
 import '@typechain/hardhat';
 
+function getAccounts(): string[] {
+  const key = process.env.RELAYER_PRIVATE_KEY;
+  if (!key) return [];
+  const hex = key.startsWith('0x') ? key.slice(2) : key;
+  if (hex.length !== 64 || !/^[0-9a-fA-F]+$/.test(hex)) return [];
+  return [key];
+}
+
 const relayerPrivateKey = process.env.RELAYER_PRIVATE_KEY;
 const sepoliaRpcUrl = process.env.SEPOLIA_RPC_URL;
 
@@ -17,7 +25,7 @@ const config: HardhatUserConfig = {
       ? {
           sepolia: {
             url: sepoliaRpcUrl,
-            accounts: [relayerPrivateKey],
+            accounts: getAccounts(),
           },
         }
       : {},
