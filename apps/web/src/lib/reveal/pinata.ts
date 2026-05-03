@@ -1,7 +1,12 @@
 import { Readable } from 'node:stream';
 import PinataSDK from '@pinata/sdk';
 import { Rarity } from '@org/shared-types';
-import { ipfsGateway } from '@org/contract-client';
+
+const DEFAULT_IPFS_GATEWAY = 'https://ipfs.io/ipfs/';
+
+function ipfsGateway(): string {
+  return process.env.NEXT_PUBLIC_IPFS_GATEWAY ?? DEFAULT_IPFS_GATEWAY;
+}
 
 let pinata: PinataSDK | null = null;
 
