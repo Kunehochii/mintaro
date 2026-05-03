@@ -11,15 +11,15 @@ An AI-generated NFT gacha dApp on Ethereum Sepolia testnet. Users mint NFTs with
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Frontend | Next.js 16, React 19, Tailwind CSS, ethers v6 |
-| Smart Contracts | Solidity ^0.8.20, OpenZeppelin, Hardhat |
-| Monorepo | Nx, pnpm workspaces |
-| AI Generation | OpenAI DALL·E 3 |
-| Storage | IPFS (Pinata) |
-| Identity | MetaMask (`window.ethereum`) |
-| Deployment | Sepolia testnet + Vercel |
+| Layer           | Technology                                    |
+| --------------- | --------------------------------------------- |
+| Frontend        | Next.js 16, React 19, Tailwind CSS, ethers v6 |
+| Smart Contracts | Solidity ^0.8.20, OpenZeppelin, Hardhat       |
+| Monorepo        | Nx, pnpm workspaces                           |
+| AI Generation   | OpenAI DALL·E 3                               |
+| Storage         | IPFS (Pinata)                                 |
+| Identity        | MetaMask (`window.ethereum`)                  |
+| Deployment      | Sepolia testnet + Vercel                      |
 
 ## Architecture
 
@@ -41,7 +41,7 @@ libs/
 
 ### Auth Flow
 
-No login screen. The frontend checks `window.ethereum.selectedAddress` on load. A **Connect MetaMask** button calls `eth_requestAccounts`. Account/chain changes are handled via `accountsChanged` and `chainChanged` listeners. A user *is* their wallet address — no traditional backend user store.
+No login screen. The frontend checks `window.ethereum.selectedAddress` on load. A **Connect MetaMask** button calls `eth_requestAccounts`. Account/chain changes are handled via `accountsChanged` and `chainChanged` listeners. A user _is_ their wallet address — no traditional backend user store.
 
 ### Data Strategy — No Database
 
@@ -49,12 +49,12 @@ The chain is the source of truth: ownership via `ownerOf(tokenId)`, gallery via 
 
 ## Rarity Distribution
 
-| Affix | Probability |
-|-------|-------------|
-| Common | 70% |
-| Rare | 20% |
-| Splendid | 8% |
-| Divine | 2% |
+| Affix    | Probability |
+| -------- | ----------- |
+| Common   | 70%         |
+| Rare     | 20%         |
+| Splendid | 8%          |
+| Divine   | 2%          |
 
 ## Getting Started
 
@@ -67,19 +67,8 @@ The chain is the source of truth: ownership via `ownerOf(tokenId)`, gallery via 
 
 ### Environment Setup
 
-Copy `.env.example` to `.env.local` and fill in:
-
-```bash
-# Server-side only (never prefix with NEXT_PUBLIC_)
-RELAYER_PRIVATE_KEY=    # Wallet that calls setTokenURI
-OPENAI_API_KEY=         # OpenAI API key for DALL·E 3
-PINATA_JWT=             # Pinata JWT for IPFS pinning
-SEPOLIA_RPC_URL=        # Alchemy/Infura Sepolia RPC URL
-
-# Client-safe
-NEXT_PUBLIC_CONTRACT_ADDRESS=  # Deployed AffixNFT address
-NEXT_PUBLIC_CHAIN_ID=11155111
-```
+Copy `.env.example` to `.env.local` and fill in each value.
+See **[Environment Variables Setup](./docs/environment-setup.md)** for step-by-step instructions on obtaining every key (free, except OpenAI which requires a $5 top-up).
 
 ### Local Development
 
@@ -92,15 +81,17 @@ pnpm nx run contracts:test      # Run Hardhat tests
 
 ### Available Nx Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm nx run web:dev` | Start Next.js dev server |
-| `pnpm nx run web:build` | Build Next.js for production |
-| `pnpm nx run web:lint` | Lint frontend code |
-| `pnpm nx run contracts:compile` | Compile Solidity contracts |
-| `pnpm nx run contracts:test` | Run Hardhat test suite |
-| `pnpm nx run contracts:lint` | Lint contract code |
-| `pnpm nx run shared-types:build` | Build shared types library |
+| Command                          | Description                     |
+| -------------------------------- | ------------------------------- |
+| `pnpm nx run web:dev`            | Start Next.js dev server        |
+| `pnpm nx run web:build`          | Build Next.js for production    |
+| `pnpm nx run web:lint`           | Lint frontend code              |
+| `pnpm nx run contracts:compile`  | Compile Solidity contracts      |
+| `pnpm nx run contracts:test`     | Run Hardhat test suite          |
+| `pnpm nx run contracts:lint`     | Lint contract code              |
+| `pnpm nx run contracts:deploy`   | Deploy contracts to a network   |
+| `pnpm nx run contracts:verify`   | Verify deployed contract source |
+| `pnpm nx run shared-types:build` | Build shared types library      |
 
 ## Vercel Deployment
 
@@ -108,14 +99,14 @@ pnpm nx run contracts:test      # Run Hardhat tests
 2. Set the **Root Directory** to `apps/web`
 3. Configure the following **Environment Variables** in the Vercel dashboard:
 
-| Key | Value | Notes |
-|-----|-------|-------|
-| `RELAYER_PRIVATE_KEY` | `0x...` | Server-side only |
-| `OPENAI_API_KEY` | `sk-...` | Server-side only |
-| `PINATA_JWT` | `eyJ...` | Server-side only |
-| `SEPOLIA_RPC_URL` | `https://...` | Server-side only |
-| `NEXT_PUBLIC_CONTRACT_ADDRESS` | `0x...` | Client-safe |
-| `NEXT_PUBLIC_CHAIN_ID` | `11155111` | Client-safe |
+| Key                            | Value         | Notes            |
+| ------------------------------ | ------------- | ---------------- |
+| `RELAYER_PRIVATE_KEY`          | `0x...`       | Server-side only |
+| `OPENAI_API_KEY`               | `sk-...`      | Server-side only |
+| `PINATA_JWT`                   | `eyJ...`      | Server-side only |
+| `SEPOLIA_RPC_URL`              | `https://...` | Server-side only |
+| `NEXT_PUBLIC_CONTRACT_ADDRESS` | `0x...`       | Client-safe      |
+| `NEXT_PUBLIC_CHAIN_ID`         | `11155111`    | Client-safe      |
 
 4. Deploy — **Vercel automatically detects Next.js** and uses the default build command (`next build`) and output directory (`.next`)
 
@@ -124,8 +115,14 @@ The relayer API routes under `apps/web/src/app/api/` will use the server-side en
 ## Deployed Addresses
 
 | Contract | Sepolia Address |
-|----------|----------------|
-| AffixNFT | `TBD` |
+| -------- | --------------- |
+| AffixNFT | `TBD`           |
+
+The deployment address is stored in `apps/contracts/deployments/sepolia.json`. After deploying, copy the `address` field into `.env.local` as `NEXT_PUBLIC_CONTRACT_ADDRESS`.
+
+```bash
+pnpm nx run contracts:deploy -- --network sepolia
+```
 
 ## Team
 

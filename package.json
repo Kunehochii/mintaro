@@ -6,6 +6,7 @@
     "prepare": "husky"
   },
   "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md,html,yml,yaml}": "prettier --write",
     "apps/contracts/**/*.{ts,js}": "pnpm nx run contracts:lint",
     "apps/web/**/*.{ts,tsx,js,jsx}": "pnpm nx run web:lint"
   },

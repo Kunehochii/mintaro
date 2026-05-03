@@ -48,6 +48,23 @@
           "command": "npx hardhat compile"
         }
       },
+      "deploy": {
+        "executor": "nx:run-commands",
+        "dependsOn": [
+          "compile"
+        ],
+        "options": {
+          "cwd": "apps/contracts",
+          "command": "npx hardhat run scripts/deploy.ts"
+        }
+      },
+      "verify": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "apps/contracts",
+          "command": "npx hardhat verify"
+        }
+      },
       "prune-lockfile": {
         "dependsOn": [
           "build"

@@ -54,6 +54,11 @@ out
 # Hardhat
 apps/contracts/artifacts
 apps/contracts/cache
-libs/shared-types/src/generated
 
 test-output
+
+.env.local
+.env
+
+.github/prompts/**
+.claude/skills/**
