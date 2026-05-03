@@ -2,10 +2,10 @@ import Image from 'next/image';
 import WalletConnect from './WalletConnect';
 
 const NAV_LINKS = [
-  { label: 'Mint', href: '#' },
-  { label: 'Gallery', href: '#' },
-  { label: 'Fuse', href: '#' },
-  { label: 'Feed', href: '#' },
+  { label: 'Mint', href: '/mint' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Fuse', href: '/fuse' },
+  { label: 'Feed', href: '/feed' },
 ];
 
 export default function Navbar() {
