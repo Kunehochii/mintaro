@@ -238,7 +238,7 @@ export default function MintPage() {
                     ) : (
                       <p className="font-mono text-xs text-vapor-muted">
                         Admin retry not configured. Set
-                        NEXT_PUBLIC_REVEAL_ADMIN_SECRET in .env.local.
+                        NEXT_PUBLIC_REVEAL_ADMIN_SECRET in .env.
                       </p>
                     )}
                   </div>
