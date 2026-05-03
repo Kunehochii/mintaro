@@ -23,16 +23,15 @@ function FuseInner() {
   const busy = status.kind === 'awaiting-signature' || status.kind === 'mining';
 
   useEffect(() => {
-    if (status.kind === 'success') {
-      setConfirmOpen(false);
-      const id = status.newTokenId.toString();
-      const t = setTimeout(() => {
-        clear();
-        reset();
-        router.push(`/gallery/${id}`);
-      }, 800);
-      return () => clearTimeout(t);
-    }
+    if (status.kind !== 'success') return undefined;
+    setConfirmOpen(false);
+    const id = status.newTokenId.toString();
+    const t = setTimeout(() => {
+      clear();
+      reset();
+      router.push(`/gallery/${id}`);
+    }, 800);
+    return () => clearTimeout(t);
   }, [status, clear, reset, router]);
 
   return (
