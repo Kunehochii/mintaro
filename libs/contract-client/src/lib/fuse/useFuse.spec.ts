@@ -14,6 +14,16 @@ describe('mapFuseError', () => {
     expect(mapFuseError(e)).toBe('AffixNFT: cannot fuse high-tier token');
   });
 
+  it('returns a friendly message for CALL_EXCEPTION without a decoded reason', () => {
+    const e = {
+      code: 'CALL_EXCEPTION',
+      message: 'transaction execution reverted',
+    };
+    expect(mapFuseError(e)).toBe(
+      'Transaction reverted on-chain. One of the selected tokens may no longer be eligible.',
+    );
+  });
+
   it('falls back to the message field when no code/reason', () => {
     expect(mapFuseError(new Error('boom'))).toBe('boom');
   });

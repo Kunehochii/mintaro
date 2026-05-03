@@ -25,6 +25,9 @@ export function mapFuseError(err: unknown): string {
   const e = err as MaybeError;
   if (e?.code === 'ACTION_REJECTED') return 'Transaction rejected.';
   if (e?.reason) return e.reason;
+  if (e?.code === 'CALL_EXCEPTION') {
+    return 'Transaction reverted on-chain. One of the selected tokens may no longer be eligible.';
+  }
   if (e?.message) return e.message;
   return 'Failed to fuse.';
 }
@@ -48,7 +51,11 @@ export function useFuse(): UseFuseResult {
       }
       try {
         setStatus({ kind: 'awaiting-signature' });
-        const tx = await contract.fuse([...tokenIds]);
+        const ids = [...tokenIds];
+        const estimate = await contract.fuse.estimateGas(ids);
+        const tx = await contract.fuse(ids, {
+          gasLimit: (estimate * 130n) / 100n,
+        });
         setStatus({ kind: 'mining', txHash: tx.hash });
         const receipt = await tx.wait();
         if (!receipt) {
