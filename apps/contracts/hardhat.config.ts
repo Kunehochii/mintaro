@@ -2,7 +2,8 @@ import type { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
 import '@typechain/hardhat';
 
-const hasSepolia = Boolean(process.env.RELAYER_PRIVATE_KEY);
+const relayerPrivateKey = process.env.RELAYER_PRIVATE_KEY;
+const sepoliaRpcUrl = process.env.SEPOLIA_RPC_URL;
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -11,14 +12,15 @@ const config: HardhatUserConfig = {
       evmVersion: 'cancun',
     },
   },
-  networks: hasSepolia
-    ? {
-        sepolia: {
-          url: process.env.SEPOLIA_RPC_URL ?? '',
-          accounts: [process.env.RELAYER_PRIVATE_KEY!],
-        },
-      }
-    : {},
+  networks:
+    relayerPrivateKey && sepoliaRpcUrl
+      ? {
+          sepolia: {
+            url: sepoliaRpcUrl,
+            accounts: [relayerPrivateKey],
+          },
+        }
+      : {},
   etherscan: {
     apiKey: {
       sepolia: process.env.ETHERSCAN_API_KEY ?? '',
