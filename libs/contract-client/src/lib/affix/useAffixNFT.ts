@@ -97,11 +97,10 @@ export function useAffixNFT(
 
   const getContract = useCallback((): Contract | null => {
     if (!signer || !contractAddress) return null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return AffixNFT__factory.connect(
       contractAddress,
       signer,
-    ) as any as Contract;
+    ) as unknown as Contract;
   }, [signer, contractAddress]);
 
   const getRpcUrl = useCallback((): string => {
@@ -149,8 +148,7 @@ export function useAffixNFT(
     if (lastId != null) {
       void checkExistingToken(lastId);
     }
-    // Run once when signer+address become available
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Run once when signer+address become available — intentional dep list
   }, [contractAddress, !!signer]);
 
   const resolveTokenUri = useCallback(
