@@ -1,8 +1,10 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useWallet, truncateAddress } from '@org/contract-client';
 
 export default function WalletConnect() {
+  const [mounted, setMounted] = useState(false);
   const {
     isMetaMaskInstalled,
     isConnected,
@@ -12,6 +14,15 @@ export default function WalletConnect() {
     connect,
     switchToSepolia,
   } = useWallet();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Avoid hydration mismatch by rendering nothing on first server render
+  if (!mounted) {
+    return <div className="flex items-center gap-3" />;
+  }
 
   if (!isMetaMaskInstalled) {
     return (
