@@ -6,13 +6,6 @@
 import { useEffect, useState } from 'react';
 import { Rarity } from '@org/shared-types';
 
-const TIERS: Rarity[] = [
-  Rarity.Common,
-  Rarity.Rare,
-  Rarity.Splendid,
-  Rarity.Divine,
-];
-
 function pseudoRandom(seed: bigint, salt: number): number {
   // FNV-ish mix; cheap, deterministic, no crypto needed.
   let h = Number((seed ^ BigInt(salt * 2654435761)) & 0xffffffffn);
@@ -54,7 +47,3 @@ export function useTokenAffixes(tokenId: bigint | null): UseTokenAffixesResult {
   }, [tokenId]);
   return { affixes, isLoading: false };
 }
-
-// Sanity reference of what TIERS array order should be — kept to detect
-// accidental changes in @org/shared-types' Rarity enum.
-void TIERS;

@@ -1,27 +1,14 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import { Rarity } from '@org/shared-types';
 import {
   useGalleryRow,
   ipfsGateway,
   resolveIpfsUri,
 } from '@org/contract-client';
 import AffixBadge from './AffixBadge';
-
-const RARITY_BORDER: Record<Rarity, string> = {
-  [Rarity.Common]: 'border-vapor-muted/30',
-  [Rarity.Rare]: 'border-vapor-mint/50 shadow-glow-mint',
-  [Rarity.Splendid]: 'border-vapor-purple/50 shadow-glow-purple',
-  [Rarity.Divine]: 'border-vapor-gold/60 shadow-glow-gold',
-};
-
-const RARITY_LABEL: Record<Rarity, string> = {
-  [Rarity.Common]: 'text-vapor-muted',
-  [Rarity.Rare]: 'text-vapor-mint',
-  [Rarity.Splendid]: 'text-vapor-purple',
-  [Rarity.Divine]: 'text-vapor-gold',
-};
+import { RARITY_BORDER, RARITY_LABEL } from './rarityStyles';
 
 export default function TokenDetail({ tokenId }: { tokenId: bigint }) {
   const { metadata, affixes, isRevealed, highestRarity } =
@@ -36,13 +23,15 @@ export default function TokenDetail({ tokenId }: { tokenId: bigint }) {
   return (
     <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2">
       <div
-        className={`aspect-square overflow-hidden rounded-card border bg-vapor-surface/60 backdrop-blur-md ${borderClass}`}
+        className={`relative aspect-square overflow-hidden rounded-card border bg-vapor-surface/60 backdrop-blur-md ${borderClass}`}
       >
         {isRevealed && imageUrl ? (
-          <img
+          <Image
             src={imageUrl}
             alt={metadata?.name ?? `Token #${tokenId}`}
-            className="h-full w-full object-cover"
+            fill
+            sizes="(min-width: 768px) 50vw, 100vw"
+            className="object-cover"
           />
         ) : (
           <div className="relative flex h-full items-center justify-center bg-gradient-to-br from-vapor-purple/25 via-vapor-pink/10 to-vapor-cyan/25">

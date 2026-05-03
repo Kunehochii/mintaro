@@ -1,37 +1,19 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import { Rarity } from '@org/shared-types';
 import {
   useGalleryRow,
   ipfsGateway,
   resolveIpfsUri,
 } from '@org/contract-client';
 import AffixBadge from './AffixBadge';
-
-const RARITY_BORDER: Record<Rarity, string> = {
-  [Rarity.Common]: 'border-vapor-muted/30 hover:border-vapor-muted/50',
-  [Rarity.Rare]:
-    'border-vapor-mint/50 shadow-glow-mint hover:shadow-[0_0_18px_#05FFA1,0_0_36px_#05FFA160]',
-  [Rarity.Splendid]:
-    'border-vapor-purple/50 shadow-glow-purple hover:shadow-[0_0_18px_#B967FF,0_0_36px_#B967FF60]',
-  [Rarity.Divine]:
-    'border-vapor-gold/60 shadow-glow-gold hover:shadow-[0_0_18px_#FBBF24,0_0_36px_#FBBF2460]',
-};
-
-const RARITY_LABEL: Record<Rarity, string> = {
-  [Rarity.Common]: 'text-vapor-muted',
-  [Rarity.Rare]: 'text-vapor-mint',
-  [Rarity.Splendid]: 'text-vapor-purple',
-  [Rarity.Divine]: 'text-vapor-gold',
-};
-
-const RARITY_DIVIDER: Record<Rarity, string> = {
-  [Rarity.Common]: 'border-vapor-muted/20',
-  [Rarity.Rare]: 'border-vapor-mint/30',
-  [Rarity.Splendid]: 'border-vapor-purple/30',
-  [Rarity.Divine]: 'border-vapor-gold/40',
-};
+import {
+  RARITY_BORDER,
+  RARITY_BORDER_HOVER,
+  RARITY_DIVIDER,
+  RARITY_LABEL,
+} from './rarityStyles';
 
 export default function NFTCard({ tokenId }: { tokenId: bigint }) {
   const { metadata, affixes, isRevealed, highestRarity } =
@@ -41,7 +23,7 @@ export default function NFTCard({ tokenId }: { tokenId: bigint }) {
     : null;
   const tokenIdLabel = `#${tokenId.toString().padStart(4, '0')}`;
   const borderClass = isRevealed
-    ? RARITY_BORDER[highestRarity]
+    ? `${RARITY_BORDER[highestRarity]} ${RARITY_BORDER_HOVER[highestRarity]}`
     : 'border-vapor-purple/40 hover:border-vapor-purple/60';
   const ariaLabel = isRevealed
     ? `${metadata?.name ?? `Token ${tokenIdLabel}`}, ${highestRarity} tier`
@@ -55,11 +37,12 @@ export default function NFTCard({ tokenId }: { tokenId: bigint }) {
     >
       <div className="relative aspect-square w-full overflow-hidden">
         {isRevealed && imageUrl ? (
-          <img
+          <Image
             src={imageUrl}
             alt={metadata?.name ?? `Token ${tokenIdLabel}`}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fill
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-vapor-purple/25 via-vapor-pink/10 to-vapor-cyan/25">
