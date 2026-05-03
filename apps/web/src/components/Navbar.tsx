@@ -2,7 +2,7 @@ import Image from 'next/image';
 import WalletConnect from './WalletConnect';
 
 const NAV_LINKS = [
-  { label: 'Mint', href: '#' },
+  { label: 'Mint', href: '/mint' },
   { label: 'Gallery', href: '#' },
   { label: 'Fuse', href: '#' },
   { label: 'Feed', href: '#' },
