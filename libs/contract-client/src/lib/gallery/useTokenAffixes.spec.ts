@@ -1,26 +1,23 @@
 import { Rarity } from '@org/shared-types';
-import { mockAffixesForToken } from './useTokenAffixes.js';
+import { rarityFromUint8 } from './useTokenAffixes.js';
 
-describe('mockAffixesForToken', () => {
-  it('produces 1 to 3 affixes for any tokenId', () => {
-    for (let i = 0n; i < 50n; i++) {
-      const a = mockAffixesForToken(i);
-      expect(a.length).toBeGreaterThanOrEqual(1);
-      expect(a.length).toBeLessThanOrEqual(3);
-    }
+describe('rarityFromUint8', () => {
+  it('maps 0 → Common', () => {
+    expect(rarityFromUint8(0)).toBe(Rarity.Common);
   });
-
-  it('is deterministic — same tokenId returns same affixes', () => {
-    expect(mockAffixesForToken(7n)).toEqual(mockAffixesForToken(7n));
+  it('maps 1 → Rare', () => {
+    expect(rarityFromUint8(1)).toBe(Rarity.Rare);
   });
-
-  it('covers all four rarity tiers across tokenIds 0..199', () => {
-    const seen = new Set<Rarity>();
-    for (let i = 0n; i < 200n; i++)
-      for (const a of mockAffixesForToken(i)) seen.add(a);
-    expect(seen.has(Rarity.Common)).toBe(true);
-    expect(seen.has(Rarity.Rare)).toBe(true);
-    expect(seen.has(Rarity.Splendid)).toBe(true);
-    // Divine is rare; not strictly asserted to avoid flakiness.
+  it('maps 2 → Splendid', () => {
+    expect(rarityFromUint8(2)).toBe(Rarity.Splendid);
+  });
+  it('maps 3 → Divine', () => {
+    expect(rarityFromUint8(3)).toBe(Rarity.Divine);
+  });
+  it('falls back to Common for unknown values', () => {
+    expect(rarityFromUint8(7)).toBe(Rarity.Common);
+  });
+  it('accepts bigint inputs', () => {
+    expect(rarityFromUint8(2n)).toBe(Rarity.Splendid);
   });
 });

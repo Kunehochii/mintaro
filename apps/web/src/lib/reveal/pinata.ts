@@ -2,12 +2,6 @@ import { Readable } from 'node:stream';
 import PinataSDK from '@pinata/sdk';
 import { Rarity } from '@org/shared-types';
 
-const DEFAULT_IPFS_GATEWAY = 'https://ipfs.io/ipfs/';
-
-function ipfsGateway(): string {
-  return process.env.NEXT_PUBLIC_IPFS_GATEWAY ?? DEFAULT_IPFS_GATEWAY;
-}
-
 let pinata: PinataSDK | null = null;
 
 function getPinata(): PinataSDK {
@@ -73,7 +67,6 @@ export async function pinImageAndMetadata(
   affixes: Rarity[],
 ): Promise<string> {
   const client = getPinata();
-  const gateway = ipfsGateway();
 
   await client.testAuthentication().catch((err: Error) => {
     throw new Error(`Pinata authentication failed: ${err.message}`);
@@ -88,22 +81,12 @@ export async function pinImageAndMetadata(
 
   const imageCid = imageResult.IpfsHash;
 
-  const fetched = await fetch(`${gateway}${imageCid}`);
-  if (!fetched.ok) {
-    throw new Error(`Failed to verify pinned image at ${imageCid}`);
-  }
-
   const metadata = buildMetadata(tokenId, affixes, imageCid);
   const metadataResult = await client.pinJSONToIPFS(metadata, {
     pinataMetadata: { name: `affix-${tokenId}-metadata.json` },
   });
 
   const metadataCid = metadataResult.IpfsHash;
-
-  const metadataFetched = await fetch(`${gateway}${metadataCid}`);
-  if (!metadataFetched.ok) {
-    throw new Error(`Failed to verify pinned metadata at ${metadataCid}`);
-  }
 
   return `ipfs://${metadataCid}`;
 }

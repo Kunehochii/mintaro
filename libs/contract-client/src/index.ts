@@ -24,6 +24,11 @@ export type {
   NFTMetadata,
 } from './lib/gallery/types.js';
 
+export { useFuse } from './lib/fuse/useFuse.js';
+export type { FuseStatus, UseFuseResult } from './lib/fuse/useFuse.js';
+export { isFusionEligible } from './lib/fuse/isFusionEligible.js';
+export { parseFusedEvent } from './lib/fuse/parseFusedEvent.js';
+
 export { useReadAffixContract } from './lib/contract/useReadAffixContract.js';
 export { createReadProvider } from './lib/contract/readProvider.js';
 export { usePublicFeed } from './lib/feed/usePublicFeed.js';
