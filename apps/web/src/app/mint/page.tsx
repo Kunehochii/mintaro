@@ -2,6 +2,7 @@
 
 import { useWallet, useAffixNFT } from '@org/contract-client';
 import { useState, useCallback } from 'react';
+import RevealCard from '../../components/RevealCard';
 
 export default function MintPage() {
   const {
@@ -14,29 +15,62 @@ export default function MintPage() {
   } = useWallet();
 
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? '';
-  const { mint, doMint, totalMinted } = useAffixNFT(
-    isConnected && isCorrectNetwork ? signer : null,
-    contractAddress || null,
-  );
+  const { mint, doMint, totalMinted, mintPriceFormatted, retryReveal } =
+    useAffixNFT(
+      isConnected && isCorrectNetwork ? signer : null,
+      contractAddress || null,
+    );
 
   const [retryTokenId, setRetryTokenId] = useState('');
-  const [retryResult, setRetryResult] = useState<string | null>(null);
+  const [retryResult, setRetryResult] = useState<{
+    ok: boolean;
+    message: string;
+  } | null>(null);
+  const [showAdminRetry, setShowAdminRetry] = useState(false);
 
-  const handleRetry = useCallback(async () => {
+  const handleAdminRetry = useCallback(async () => {
     const tokenId = Number(retryTokenId);
     if (!Number.isFinite(tokenId) || tokenId < 0) return;
-    setRetryResult('Retrying...');
+    setRetryResult({ ok: false, message: 'Retrying...' });
     try {
       const res = await fetch(`/api/reveal/retry?tokenId=${tokenId}`, {
         method: 'POST',
         headers: { 'x-admin-secret': 'mintaro-reveal-admin-secret' },
       });
-      const data = await res.json();
-      setRetryResult(JSON.stringify(data, null, 2));
+      const data = (await res.json()) as Record<string, unknown>;
+
+      if (data.success) {
+        if (data.skip) {
+          setRetryResult({
+            ok: true,
+            message: `Token #${tokenId} already revealed on-chain`,
+          });
+        } else {
+          const tx =
+            typeof data.txHash === 'string'
+              ? data.txHash.slice(0, 10) + '...'
+              : '';
+          setRetryResult({
+            ok: true,
+            message: `Reveal pipeline triggered for token #${tokenId} ${tx}`,
+          });
+        }
+      } else {
+        const err =
+          typeof data.error === 'string' ? data.error : 'Unknown error';
+        setRetryResult({ ok: false, message: err });
+      }
     } catch (e: unknown) {
-      setRetryResult(e instanceof Error ? e.message : 'Retry failed');
+      setRetryResult({
+        ok: false,
+        message: e instanceof Error ? e.message : 'Network error',
+      });
     }
   }, [retryTokenId]);
+
+  const priceLabel = mintPriceFormatted
+    ? `Mint for ${mintPriceFormatted} ETH`
+    : 'Mint';
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 pt-24">
@@ -104,10 +138,10 @@ export default function MintPage() {
                     ? 'Confirming on chain...'
                     : mint.status === 'revealing'
                       ? 'Revealing artwork...'
-                      : 'Mint for Free'}
+                      : priceLabel}
               </button>
 
-              {/* Status */}
+              {/* Tx Hash */}
               {mint.txHash && (
                 <p className="mt-3 font-mono text-xs text-vapor-cyan break-all">
                   Tx:{' '}
@@ -122,68 +156,83 @@ export default function MintPage() {
                 </p>
               )}
 
-              {/* Revealed Artwork */}
-              {mint.status === 'revealed' && mint.imageUrl && (
-                <div className="mt-4">
-                  <img
-                    src={mint.imageUrl}
-                    alt={`Affix #${mint.tokenId}`}
-                    className="w-full rounded-lg border border-vapor-purple/40"
-                  />
-                  <p className="mt-2 text-center font-display text-vapor-cyan">
-                    Affix #{mint.tokenId} revealed!
-                  </p>
-                </div>
+              {/* Reveal Card */}
+              {(mint.status === 'revealing' || mint.status === 'revealed') && (
+                <RevealCard
+                  tokenId={mint.tokenId}
+                  imageUrl={mint.imageUrl}
+                  affixes={mint.affixes}
+                  animationPlayed={mint.animationPlayed}
+                />
               )}
 
-              {/* Revealing spinner */}
-              {mint.status === 'revealing' && (
-                <div className="mt-6 flex flex-col items-center gap-3">
-                  <div className="size-12 animate-spin rounded-full border-4 border-vapor-purple/30 border-t-vapor-mint" />
-                  <p className="font-mono text-sm text-vapor-muted">
-                    Waiting for AI to generate artwork...
-                  </p>
-                </div>
-              )}
-
-              {/* Error */}
-              {mint.status === 'failed' && mint.error && (
+              {/* Error + Retry */}
+              {mint.status === 'failed' && mint.tokenId != null && (
                 <div className="mt-4 rounded-lg bg-red-900/40 border border-red-500/40 p-4">
-                  <p className="font-mono text-sm text-red-300">{mint.error}</p>
-                  <p className="mt-2 font-mono text-xs text-vapor-muted">
-                    You can retry the reveal manually below.
+                  <p className="font-mono text-sm text-red-300">
+                    {mint.error || 'Reveal timed out.'}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (mint.tokenId != null) retryReveal(mint.tokenId);
+                    }}
+                    className="mt-3 w-full rounded-btn border border-vapor-cyan px-4 py-2 font-display text-sm uppercase text-vapor-cyan hover:shadow-glow-cyan transition-all"
+                  >
+                    Retry Reveal
+                  </button>
+                </div>
+              )}
+
+              {/* Error without tokenId (transaction failed) */}
+              {mint.status === 'failed' && mint.tokenId == null && (
+                <div className="mt-4 rounded-lg bg-red-900/40 border border-red-500/40 p-4">
+                  <p className="font-mono text-sm text-red-300">
+                    {mint.error || 'Transaction failed.'}
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Admin Retry */}
-            <details className="mt-6 rounded-card border border-vapor-purple/20 bg-vapor-surface/40 p-4">
-              <summary className="cursor-pointer font-display text-sm uppercase tracking-wider text-vapor-muted hover:text-vapor-cyan">
-                Retry Failed Reveal
-              </summary>
-              <div className="mt-4 flex gap-3">
-                <input
-                  type="number"
-                  placeholder="Token ID"
-                  value={retryTokenId}
-                  onChange={(e) => setRetryTokenId(e.target.value)}
-                  className="flex-1 rounded-btn border border-vapor-purple/30 bg-vapor-bg px-4 py-2 font-mono text-sm text-white placeholder:text-vapor-muted focus:border-vapor-cyan focus:outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={handleRetry}
-                  className="rounded-btn bg-vapor-purple px-4 py-2 font-display text-xs uppercase text-white hover:shadow-glow-purple transition-all"
-                >
-                  Retry
-                </button>
-              </div>
-              {retryResult && (
-                <pre className="mt-3 overflow-auto rounded bg-vapor-bg p-3 font-mono text-xs text-vapor-muted">
-                  {retryResult}
-                </pre>
+            {/* Dev Tools */}
+            <div className="mt-4 border-t border-vapor-purple/10 pt-4">
+              <button
+                type="button"
+                onClick={() => setShowAdminRetry(!showAdminRetry)}
+                className="font-mono text-xs tracking-wider text-vapor-muted/40 hover:text-vapor-muted transition-colors uppercase"
+              >
+                Dev Tools
+              </button>
+
+              {showAdminRetry && (
+                <div className="mt-3 rounded-card border border-vapor-purple/15 bg-vapor-surface/30 p-4">
+                  <div className="flex gap-3">
+                    <input
+                      type="number"
+                      placeholder="Token ID"
+                      value={retryTokenId}
+                      onChange={(e) => setRetryTokenId(e.target.value)}
+                      className="flex-1 rounded-btn border border-vapor-purple/20 bg-vapor-bg px-4 py-2 font-mono text-sm text-white placeholder:text-vapor-muted/50 focus:border-vapor-cyan focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAdminRetry}
+                      className="rounded-btn bg-vapor-purple/80 px-4 py-2 font-display text-xs uppercase text-white hover:bg-vapor-purple hover:shadow-glow-purple transition-all"
+                    >
+                      Retry
+                    </button>
+                  </div>
+                  {retryResult && (
+                    <p
+                      className={`mt-3 font-mono text-xs ${retryResult.ok ? 'text-vapor-mint' : 'text-red-400'}`}
+                    >
+                      {retryResult.ok ? '\u2713 ' : '\u2717 '}
+                      {retryResult.message}
+                    </p>
+                  )}
+                </div>
               )}
-            </details>
+            </div>
           </>
         )}
       </div>
