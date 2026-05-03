@@ -23,3 +23,8 @@ export type {
   UserToken,
   NFTMetadata,
 } from './lib/gallery/types.js';
+
+export { useFuse } from './lib/fuse/useFuse.js';
+export type { FuseStatus, UseFuseResult } from './lib/fuse/useFuse.js';
+export { isFusionEligible } from './lib/fuse/isFusionEligible.js';
+export { parseFusedEvent } from './lib/fuse/parseFusedEvent.js';

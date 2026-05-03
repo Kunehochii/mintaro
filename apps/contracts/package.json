@@ -135,7 +135,10 @@
       }
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "@org/contract-client": "workspace:*",
+    "@org/shared-types": "workspace:*"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "^5.0.0",

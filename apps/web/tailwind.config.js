@@ -76,11 +76,16 @@ module.exports = {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
+        'pink-pulse': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.55' },
+        },
       },
       animation: {
         glitch: 'glitch 400ms steps(1) infinite',
         'gradient-cycle': 'gradient-cycle 3s linear infinite',
         shimmer: 'shimmer 2s linear infinite',
+        'pink-pulse': 'pink-pulse 2s ease-in-out infinite',
       },
     },
   },
