@@ -1,8 +1,8 @@
 'use client';
 
 import { useUserTokens } from '@org/contract-client';
-import NFTCard from './NFTCard.js';
-import EmptyState from './EmptyState.js';
+import NFTCard from './NFTCard';
+import EmptyState from './EmptyState';
 
 export default function GalleryGrid() {
   const { tokens, isLoading, error } = useUserTokens();

@@ -7,7 +7,7 @@ import {
   ipfsGateway,
   resolveIpfsUri,
 } from '@org/contract-client';
-import AffixBadge from './AffixBadge.js';
+import AffixBadge from './AffixBadge';
 
 const RARITY_GLOW: Record<Rarity, string> = {
   [Rarity.Common]: 'border-vapor-muted/30',

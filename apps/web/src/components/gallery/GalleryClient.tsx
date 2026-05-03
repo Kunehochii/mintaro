@@ -1,9 +1,9 @@
 'use client';
 
 import { useWallet } from '@org/contract-client';
-import GalleryGrid from './GalleryGrid.js';
-import NotConnectedState from './NotConnectedState.js';
-import WrongNetworkState from './WrongNetworkState.js';
+import GalleryGrid from './GalleryGrid';
+import NotConnectedState from './NotConnectedState';
+import WrongNetworkState from './WrongNetworkState';
 
 export default function GalleryClient() {
   const { isConnected, isCorrectNetwork } = useWallet();
