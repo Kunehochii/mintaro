@@ -50,6 +50,24 @@ const RARITY_STYLES: Record<
   },
 };
 
+const RARITY_RANK: Record<string, number> = {
+  common: 0,
+  rare: 1,
+  splendid: 2,
+  divine: 3,
+};
+
+function getHighestAffix(affixes: AffixEntry[]): AffixEntry | null {
+  const filtered = affixes.filter((a) => a.trait_type === 'Affix');
+  if (filtered.length === 0) return null;
+  return filtered.reduce((highest, curr) =>
+    RARITY_RANK[getRarityLabel(curr.value)] >
+    RARITY_RANK[getRarityLabel(highest.value)]
+      ? curr
+      : highest,
+  );
+}
+
 function AffixBadge({ value }: { value: string }) {
   const rarity = getRarityLabel(value);
   const styles = RARITY_STYLES[rarity];
@@ -139,14 +157,13 @@ export default function RevealCard({
         )}
       </div>
 
-      {/* Affixes below the card */}
+      {/* Affix below the card */}
       {!isShimmer && affixes.length > 0 && (
         <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
-          {affixes
-            .filter((a) => a.trait_type === 'Affix')
-            .map((a, i) => (
-              <AffixBadge key={i} value={a.value} />
-            ))}
+          {(() => {
+            const highest = getHighestAffix(affixes);
+            return highest ? <AffixBadge value={highest.value} /> : null;
+          })()}
         </div>
       )}
 
