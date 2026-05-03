@@ -37,8 +37,11 @@ export function useTokenAffixes(tokenId: bigint | null): UseTokenAffixesResult {
         const raw = await contract.getAffixes(tokenId);
         if (cancelled) return;
         setAffixes(raw.map((n) => rarityFromUint8(n)));
-      } catch {
-        if (!cancelled) setAffixes([]);
+      } catch (err) {
+        if (!cancelled) {
+          console.warn(`useTokenAffixes: getAffixes(${tokenId}) failed`, err);
+          setAffixes([]);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }

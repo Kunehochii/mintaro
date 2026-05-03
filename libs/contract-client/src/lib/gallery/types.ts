@@ -16,6 +16,7 @@ export interface GalleryToken {
   tokenURI: string | null;
   metadata: NFTMetadata | null;
   affixes: Rarity[];
+  isAffixesLoading: boolean;
   isRevealed: boolean;
   highestRarity: Rarity;
 }

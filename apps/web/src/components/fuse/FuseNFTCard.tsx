@@ -6,7 +6,6 @@ import {
   isFusionEligible,
   resolveIpfsUri,
   useGalleryRow,
-  useTokenAffixes,
 } from '@org/contract-client';
 import { useFusionSelection } from './selectionContext';
 import AffixBadge from '../gallery/AffixBadge';
@@ -17,9 +16,8 @@ import {
 } from '../gallery/rarityStyles';
 
 export default function FuseNFTCard({ tokenId }: { tokenId: bigint }) {
-  const { metadata, affixes, isRevealed, highestRarity } =
+  const { metadata, affixes, isAffixesLoading, isRevealed, highestRarity } =
     useGalleryRow(tokenId);
-  const { isLoading: isAffixesLoading } = useTokenAffixes(tokenId);
   const { isSelected, toggle, isFull } = useFusionSelection();
 
   const selected = isSelected(tokenId);

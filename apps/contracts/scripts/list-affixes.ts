@@ -1,6 +1,8 @@
 import { ethers, network } from 'hardhat';
 import fs from 'fs';
 import path from 'path';
+import { isFusionEligible } from '@org/contract-client';
+import { Rarity } from '@org/shared-types';
 
 const TIER = ['Common', 'Rare', 'Splendid', 'Divine'];
 
@@ -27,8 +29,8 @@ async function main() {
     const owner = await c.ownerOf(i);
     const isMine = owner.toLowerCase() === signer.address.toLowerCase();
     if (!isMine) continue;
-    const affixes = (await c.getAffixes(i)).map((a) => Number(a));
-    const isEligible = affixes.every((a) => a <= 1);
+    const affixes = (await c.getAffixes(i)).map((a) => Number(a) as Rarity);
+    const isEligible = isFusionEligible(affixes);
     if (isEligible) eligible++;
     const names = affixes.map((a) => TIER[a] ?? `?${a}`).join(',');
     console.log(
