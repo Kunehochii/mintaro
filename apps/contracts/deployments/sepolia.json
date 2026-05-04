@@ -1,7 +1,7 @@
 {
-  "address": "0xfaD55409f2CFca7551A85b3251cf406FE475d9E1",
+  "address": "0x3975572f325E14Ab87fE44957d9d697329b50438",
   "deployer": "0x3DfAd88239930383448fE2C7D4ea4eB8988251c9",
-  "blockNumber": 10782642,
-  "txHash": "0x3fe4f8e239d129d2495212759ba4ff5f7a778787c20873e02ec827b266273907",
-  "deployedAt": "2026-05-03T15:46:24.983Z"
+  "blockNumber": 10786249,
+  "txHash": "0xdb8902ceb85b63daf590b2cf210078a5987c8a50ea032c3117889120acf3f2aa",
+  "deployedAt": "2026-05-04T05:02:26.444Z"
 }
