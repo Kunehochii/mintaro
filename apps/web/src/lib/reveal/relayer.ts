@@ -1,4 +1,23 @@
+import { Rarity } from '@org/shared-types';
 import { getContract, getWallet } from './events';
+
+const RARITY_BY_UINT8: Record<number, Rarity> = {
+  0: Rarity.Common,
+  1: Rarity.Rare,
+  2: Rarity.Splendid,
+  3: Rarity.Divine,
+};
+
+export async function getAffixesOnChain(tokenId: number): Promise<Rarity[]> {
+  const contract = getContract();
+  const raw = await contract.getAffixes(BigInt(tokenId));
+  return raw.map((v) => {
+    const n = typeof v === 'bigint' ? Number(v) : Number(v);
+    const r = RARITY_BY_UINT8[n];
+    if (!r) throw new Error(`unknown affix value: ${n}`);
+    return r;
+  });
+}
 
 export async function setTokenURI(
   tokenId: number,

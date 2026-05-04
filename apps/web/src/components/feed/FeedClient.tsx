@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react';
 import {
   applyRarityFilter,
+  displayedTopRarity,
+  useFeedMetadataMap,
   usePublicFeed,
   type RarityTierFilter,
 } from '@org/contract-client';
@@ -13,9 +15,15 @@ export default function FeedClient() {
   const { entries, isLoading, error } = usePublicFeed();
   const [filter, setFilter] = useState<RarityTierFilter>('All');
 
+  const uris = useMemo(() => entries.map((e) => e.tokenURI), [entries]);
+  const metadataMap = useFeedMetadataMap(uris);
+
   const visible = useMemo(
-    () => applyRarityFilter(entries, filter),
-    [entries, filter],
+    () =>
+      applyRarityFilter(entries, filter, (e) =>
+        displayedTopRarity(metadataMap[e.tokenURI], e.affixes),
+      ),
+    [entries, filter, metadataMap],
   );
 
   return (
