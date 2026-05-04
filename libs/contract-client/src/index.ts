@@ -28,3 +28,14 @@ export { useFuse } from './lib/fuse/useFuse.js';
 export type { FuseStatus, UseFuseResult } from './lib/fuse/useFuse.js';
 export { isFusionEligible } from './lib/fuse/isFusionEligible.js';
 export { parseFusedEvent } from './lib/fuse/parseFusedEvent.js';
+
+export { useReadAffixContract } from './lib/contract/useReadAffixContract.js';
+export { createReadProvider } from './lib/contract/readProvider.js';
+export { usePublicFeed } from './lib/feed/usePublicFeed.js';
+export type { UsePublicFeedResult } from './lib/feed/usePublicFeed.js';
+export { useFeedMetadata } from './lib/feed/useFeedMetadata.js';
+export type { UseFeedMetadataResult } from './lib/feed/useFeedMetadata.js';
+export { applyRarityFilter } from './lib/feed/rarityFilter.js';
+export { formatRelativeTime } from './lib/feed/formatRelativeTime.js';
+export type { FeedEntry, RarityTierFilter } from './lib/feed/types.js';
+export { RARITY_TIER_FILTERS } from './lib/feed/types.js';

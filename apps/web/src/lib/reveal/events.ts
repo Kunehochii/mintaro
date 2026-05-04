@@ -1,6 +1,18 @@
 import { JsonRpcProvider, Wallet, type ContractRunner } from 'ethers';
 import { AffixNFT__factory, type AffixNFT } from '@org/shared-types';
 
+function deploymentBlock(): number {
+  const raw = process.env.NEXT_PUBLIC_DEPLOYMENT_BLOCK;
+  if (!raw) throw new Error('NEXT_PUBLIC_DEPLOYMENT_BLOCK is not set');
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 0 || !Number.isInteger(n)) {
+    throw new Error(
+      `NEXT_PUBLIC_DEPLOYMENT_BLOCK must be a non-negative integer, got "${raw}".`,
+    );
+  }
+  return n;
+}
+
 let _provider: JsonRpcProvider | null = null;
 
 export function getProvider(): JsonRpcProvider {
@@ -35,7 +47,7 @@ export function getWallet(): Wallet {
 export async function findMintRequested(tokenId: number) {
   const contract = getContract();
   const filter = contract.filters.MintRequested(BigInt(tokenId));
-  return contract.queryFilter(filter, 0);
+  return contract.queryFilter(filter, deploymentBlock());
 }
 
 export async function findMintRequestedRange(
