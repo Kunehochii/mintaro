@@ -56,12 +56,12 @@ export default function Hero() {
           >
             Mint Your First NFT
           </Link>
-          <a
-            href="#"
+          <Link
+            href="/feed"
             className="cursor-pointer rounded-btn border border-vapor-purple px-8 py-3 font-display text-sm font-semibold uppercase tracking-wider text-vapor-purple transition-all duration-150 hover:shadow-glow-cyan hover:text-vapor-cyan"
           >
             Explore the Feed
-          </a>
+          </Link>
         </div>
 
         {/* Stat row */}
