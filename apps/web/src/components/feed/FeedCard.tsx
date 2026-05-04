@@ -4,10 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   affixBadgeItems,
+  displayedTopRarity,
   type FeedEntry,
   formatRelativeTime,
   ipfsGateway,
-  rarityFromAffixes,
   resolveIpfsUri,
   truncateAddress,
   useFeedMetadata,
@@ -24,7 +24,7 @@ export default function FeedCard({ entry }: { entry: FeedEntry }) {
   const { metadata, isLoading } = useFeedMetadata(entry.tokenURI);
   const imageUrl = resolveIpfsUri(metadata?.image, ipfsGateway());
   const tokenIdLabel = `#${entry.tokenId.toString().padStart(4, '0')}`;
-  const tier = rarityFromAffixes(entry.affixes);
+  const tier = displayedTopRarity(metadata, entry.affixes);
   const borderClass = `${RARITY_BORDER[tier]} ${RARITY_BORDER_HOVER[tier]}`;
   const isoTimestamp = new Date(entry.timestampSec * 1000).toISOString();
   const ariaLabel = `${metadata?.name ?? `Token ${tokenIdLabel}`}, ${tier} tier, minted by ${truncateAddress(entry.minter)}`;

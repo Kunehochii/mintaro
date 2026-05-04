@@ -1,10 +1,9 @@
 import type { Address } from 'viem';
 import { Rarity } from '@org/shared-types';
-import { computeAffixes } from './affixes';
 import { buildMintPrompt, subjectIndexFromSeed } from './prompt';
 import { generateImage } from './openai';
 import { pinImageAndMetadata } from './pinata';
-import { setTokenURI, getTokenURI } from './relayer';
+import { setTokenURI, getTokenURI, getAffixesOnChain } from './relayer';
 
 const MAX_RETRIES = 3;
 
@@ -27,7 +26,7 @@ export async function revealPipeline(
     return { success: true, skip: true };
   }
 
-  const affixes = computeAffixes(seed, minter, tokenId);
+  const affixes = await getAffixesOnChain(tokenId);
 
   let lastError: string | undefined;
 

@@ -19,6 +19,30 @@ export function rarityFromTraitValue(raw: string): Rarity {
   return Rarity.Common;
 }
 
+const RANK: Record<Rarity, number> = {
+  [Rarity.Common]: 0,
+  [Rarity.Rare]: 1,
+  [Rarity.Splendid]: 2,
+  [Rarity.Divine]: 3,
+};
+
+/**
+ * Top rarity tier as actually displayed on a card — prefers metadata Affix
+ * traits, falls back to chain affixes. Source of truth for filter UI so the
+ * filter agrees with what the user sees.
+ */
+export function displayedTopRarity(
+  metadata: NFTMetadata | null | undefined,
+  chainAffixes: readonly Rarity[],
+): Rarity {
+  const items = affixBadgeItems(metadata, chainAffixes);
+  if (items.length === 0) return Rarity.Common;
+  return items.reduce<Rarity>(
+    (best, i) => (RANK[i.rarity] > RANK[best] ? i.rarity : best),
+    Rarity.Common,
+  );
+}
+
 /**
  * Collapse duplicate tiers into one badge ordered by first occurrence, e.g.
  * Common, Common, Rare → Common 2x then Rare.
@@ -34,7 +58,7 @@ export function stackAffixBadgeItems(
     if (next === 1) order.push(item.rarity);
   }
   return order.map((rarity) => {
-    const n = counts.get(rarity)!;
+    const n = counts.get(rarity) ?? 0;
     return {
       rarity,
       label: n > 1 ? `${rarity} ${n}x` : rarity,

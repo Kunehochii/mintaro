@@ -17,6 +17,7 @@ export {
   stackAffixBadgeItems,
   MAX_METADATA_AFFIX_TRAITS,
   rarityFromTraitValue,
+  displayedTopRarity,
 } from './lib/gallery/affixBadgeItems.js';
 export type { AffixBadgeItem } from './lib/gallery/affixBadgeItems.js';
 export { resolveIpfsUri } from './lib/gallery/ipfs.js';
@@ -42,6 +43,8 @@ export { usePublicFeed } from './lib/feed/usePublicFeed.js';
 export type { UsePublicFeedResult } from './lib/feed/usePublicFeed.js';
 export { useFeedMetadata } from './lib/feed/useFeedMetadata.js';
 export type { UseFeedMetadataResult } from './lib/feed/useFeedMetadata.js';
+export { useFeedMetadataMap } from './lib/feed/useFeedMetadataMap.js';
+export type { FeedMetadataMap } from './lib/feed/useFeedMetadataMap.js';
 export { applyRarityFilter } from './lib/feed/rarityFilter.js';
 export { formatRelativeTime } from './lib/feed/formatRelativeTime.js';
 export type { FeedEntry, RarityTierFilter } from './lib/feed/types.js';

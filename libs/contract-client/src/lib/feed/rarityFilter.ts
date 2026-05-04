@@ -12,10 +12,11 @@ const RANK: Record<Rarity, number> = {
 export function applyRarityFilter(
   entries: readonly FeedEntry[],
   filter: RarityTierFilter,
+  getTopRarity: (e: FeedEntry) => Rarity = (e) => rarityFromAffixes(e.affixes),
 ): FeedEntry[] {
   if (filter === 'All') return [...entries];
   return entries.filter((e) => {
-    const top = rarityFromAffixes(e.affixes);
+    const top = getTopRarity(e);
     switch (filter) {
       case 'Common':
         return RANK[top] === RANK[Rarity.Common];
