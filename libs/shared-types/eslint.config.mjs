@@ -8,7 +8,11 @@ export default [
       '@nx/dependency-checks': [
         'error',
         {
-          ignoredFiles: ['{projectRoot}/eslint.config.{js,cjs,mjs,ts,cts,mts}'],
+          ignoredFiles: [
+            '{projectRoot}/eslint.config.{js,cjs,mjs,ts,cts,mts}',
+            '{projectRoot}/src/generated/**',
+          ],
+          ignoredDependencies: ['ethers'],
         },
       ],
     },
@@ -17,6 +21,6 @@ export default [
     },
   },
   {
-    ignores: ['**/out-tsc'],
+    ignores: ['**/out-tsc', '**/src/generated/**'],
   },
 ];

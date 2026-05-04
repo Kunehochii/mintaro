@@ -5,6 +5,12 @@
   "dependencies": {
     "next": "~16.1.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@org/contract-client": "workspace:*",
+    "@org/shared-types": "workspace:*",
+    "ethers": "^6.13.0",
+    "@pinata/sdk": "^2.1.0",
+    "openai": "^6.35.0",
+    "viem": "^2.48.8"
   }
 }

@@ -1,20 +1,28 @@
 //@ts-check
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
+
+const ipfsGatewayUrl = new URL(
+  process.env.NEXT_PUBLIC_IPFS_GATEWAY || 'https://ipfs.io/ipfs/',
+);
+const ipfsProtocol = ipfsGatewayUrl.protocol === 'http:' ? 'http' : 'https';
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
-  // Use this to set Nx-specific options
-  // See: https://nx.dev/recipes/next/next-config-setup
   nx: {},
+  transpilePackages: ['@org/contract-client', '@org/shared-types'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: ipfsProtocol,
+        hostname: ipfsGatewayUrl.hostname,
+      },
+    ],
+  },
 };
 
-const plugins = [
-  // Add more Next.js plugins to this list if needed.
-  withNx,
-];
+const plugins = [withNx];
 
 module.exports = composePlugins(...plugins)(nextConfig);

@@ -41,6 +41,30 @@
           }
         }
       },
+      "compile": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "apps/contracts",
+          "command": "pnpm exec hardhat compile"
+        }
+      },
+      "deploy": {
+        "executor": "nx:run-commands",
+        "dependsOn": [
+          "compile"
+        ],
+        "options": {
+          "cwd": "apps/contracts",
+          "command": "pnpm exec hardhat run scripts/deploy.ts"
+        }
+      },
+      "verify": {
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "apps/contracts",
+          "command": "pnpm exec hardhat verify"
+        }
+      },
       "prune-lockfile": {
         "dependsOn": [
           "build"
@@ -96,11 +120,31 @@
         }
       },
       "test": {
+        "executor": "nx:run-commands",
         "options": {
-          "passWithNoTests": true
-        }
+          "cwd": "apps/contracts",
+          "command": "pnpm exec hardhat test"
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "{projectRoot}/contracts/**/*.sol",
+          "{projectRoot}/test/**/*.ts",
+          "{projectRoot}/hardhat.config.ts"
+        ]
       }
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "@org/contract-client": "workspace:*",
+    "@org/shared-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "@typechain/ethers-v6": "^0.5.0",
+    "@typechain/hardhat": "^9.0.0",
+    "hardhat": "^2.22.0",
+    "typechain": "^8.3.0"
+  }
 }
