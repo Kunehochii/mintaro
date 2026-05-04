@@ -85,6 +85,17 @@ export function useFuse(): UseFuseResult {
           });
           return;
         }
+        // Kick the reveal relayer for the new token's mint block. Without this
+        // the off-chain pipeline only runs on cron, so fuse outputs sit
+        // unrevealed (no `setTokenURI` → no `TokenRevealed` → not in feed).
+        try {
+          const fuseBlock = Number(receipt.blockNumber);
+          await fetch(
+            `/api/reveal/watch?fromBlock=${fuseBlock}&toBlock=${fuseBlock}`,
+          );
+        } catch {
+          // watch endpoint may not be running
+        }
         setStatus({ kind: 'success', txHash: tx.hash, newTokenId });
       } catch (err) {
         setStatus({ kind: 'error', message: mapFuseError(err) });
