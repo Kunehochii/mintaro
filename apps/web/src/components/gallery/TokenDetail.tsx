@@ -4,11 +4,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   affixBadgeItems,
+  affixRaritiesForPricing,
   useGalleryRow,
   ipfsGateway,
   resolveIpfsUri,
 } from '@org/contract-client';
 import AffixBadge from './AffixBadge';
+import NftEstimatedPrice from './NftEstimatedPrice';
 import { RARITY_BORDER, RARITY_LABEL } from './rarityStyles';
 
 export default function TokenDetail({ tokenId }: { tokenId: bigint }) {
@@ -60,6 +62,9 @@ export default function TokenDetail({ tokenId }: { tokenId: bigint }) {
         <p className="font-mono text-xs text-vapor-muted">
           Token ID: {tokenId.toString()}
         </p>
+        <NftEstimatedPrice
+          affixes={affixRaritiesForPricing(metadata, affixes)}
+        />
         {isRevealed && (
           <p
             className={`font-display text-xs uppercase tracking-wider ${RARITY_LABEL[highestRarity]}`}

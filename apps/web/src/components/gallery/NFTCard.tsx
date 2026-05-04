@@ -4,11 +4,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   affixBadgeItems,
+  affixRaritiesForPricing,
   useGalleryRow,
   ipfsGateway,
   resolveIpfsUri,
 } from '@org/contract-client';
 import AffixBadge from './AffixBadge';
+import NftEstimatedPrice from './NftEstimatedPrice';
 import {
   RARITY_BORDER,
   RARITY_BORDER_HOVER,
@@ -75,6 +77,9 @@ export default function NFTCard({ tokenId }: { tokenId: bigint }) {
             </span>
           )}
         </div>
+        <NftEstimatedPrice
+          affixes={affixRaritiesForPricing(metadata, affixes)}
+        />
         {isRevealed && affixPills.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {affixPills.map((item, i) => (
