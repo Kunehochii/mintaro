@@ -67,6 +67,26 @@ export function stackAffixBadgeItems(
 }
 
 /**
+ * One rarity per affix slot for valuation — matches {@link affixBadgeItems} source rules:
+ * metadata `Affix` traits when present, otherwise on-chain tiers. Not stacked (use for `estimateNftValueWei`).
+ */
+export function affixRaritiesForPricing(
+  metadata: NFTMetadata | null | undefined,
+  chainAffixes: readonly Rarity[],
+): Rarity[] {
+  const attrs =
+    metadata?.attributes?.filter((a) => a.trait_type === 'Affix') ?? [];
+  if (attrs.length > 0) {
+    return attrs.slice(0, MAX_METADATA_AFFIX_TRAITS).map((a) => {
+      const label =
+        a.value === undefined || a.value === null ? '' : String(a.value);
+      return rarityFromTraitValue(label);
+    });
+  }
+  return [...chainAffixes];
+}
+
+/**
  * Prefers IPFS metadata `attributes` with `trait_type === "Affix"` (max five).
  * Falls back to on-chain `getAffixes` tiers when metadata has no Affix rows.
  * Duplicate tiers are stacked with an `nx` suffix on the label.

@@ -14,6 +14,7 @@ export { useGalleryRow } from './lib/gallery/useGalleryRow.js';
 export { rarityFromAffixes } from './lib/gallery/rarityFromAffixes.js';
 export {
   affixBadgeItems,
+  affixRaritiesForPricing,
   stackAffixBadgeItems,
   MAX_METADATA_AFFIX_TRAITS,
   rarityFromTraitValue,
@@ -31,6 +32,13 @@ export type {
   UserToken,
   NFTMetadata,
 } from './lib/gallery/types.js';
+export {
+  AFFIX_VALUE_MULTIPLIER_BPS,
+  estimateNftValueWei,
+  formatEstimateEth,
+} from './lib/gallery/affixValueEstimate.js';
+export { useMintPriceWei } from './lib/gallery/useMintPriceWei.js';
+export type { UseMintPriceWeiResult } from './lib/gallery/useMintPriceWei.js';
 
 export { useFuse } from './lib/fuse/useFuse.js';
 export type { FuseStatus, UseFuseResult } from './lib/fuse/useFuse.js';

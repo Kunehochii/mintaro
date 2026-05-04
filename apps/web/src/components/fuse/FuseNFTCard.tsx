@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import {
   affixBadgeItems,
+  affixRaritiesForPricing,
   ipfsGateway,
   isFusionEligible,
   resolveIpfsUri,
@@ -10,6 +11,7 @@ import {
 } from '@org/contract-client';
 import { useFusionSelection } from './selectionContext';
 import AffixBadge from '../gallery/AffixBadge';
+import NftEstimatedPrice from '../gallery/NftEstimatedPrice';
 import {
   RARITY_BORDER,
   RARITY_DIVIDER,
@@ -152,6 +154,9 @@ export default function FuseNFTCard({ tokenId }: { tokenId: bigint }) {
             </span>
           )}
         </div>
+        <NftEstimatedPrice
+          affixes={affixRaritiesForPricing(metadata, affixes)}
+        />
         {affixPills.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {affixPills.map((item, i) => (

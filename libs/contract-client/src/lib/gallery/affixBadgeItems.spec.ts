@@ -1,6 +1,7 @@
 import { Rarity } from '@org/shared-types';
 import {
   affixBadgeItems,
+  affixRaritiesForPricing,
   rarityFromTraitValue,
   stackAffixBadgeItems,
 } from './affixBadgeItems.js';
@@ -91,6 +92,29 @@ describe('affixBadgeItems', () => {
       { rarity: Rarity.Common, label: 'Common 3x' },
       { rarity: Rarity.Rare, label: 'Rare' },
     ]);
+  });
+});
+
+describe('affixRaritiesForPricing', () => {
+  it('matches metadata affix slots (unstacked) for valuation', () => {
+    const metadata = {
+      attributes: [
+        { trait_type: 'Affix', value: 'Common' },
+        { trait_type: 'Affix', value: 'Common' },
+        { trait_type: 'Affix', value: 'Rare' },
+      ],
+    };
+    expect(affixRaritiesForPricing(metadata, [Rarity.Divine])).toEqual([
+      Rarity.Common,
+      Rarity.Common,
+      Rarity.Rare,
+    ]);
+  });
+
+  it('falls back to chain when no Affix metadata', () => {
+    expect(
+      affixRaritiesForPricing({ attributes: [] }, [Rarity.Common, Rarity.Rare]),
+    ).toEqual([Rarity.Common, Rarity.Rare]);
   });
 });
 

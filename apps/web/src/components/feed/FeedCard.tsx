@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   affixBadgeItems,
+  affixRaritiesForPricing,
   displayedTopRarity,
   type FeedEntry,
   formatRelativeTime,
@@ -13,6 +14,7 @@ import {
   useFeedMetadata,
 } from '@org/contract-client';
 import AffixBadge from '../gallery/AffixBadge';
+import NftEstimatedPrice from '../gallery/NftEstimatedPrice';
 import {
   RARITY_BORDER,
   RARITY_BORDER_HOVER,
@@ -68,6 +70,9 @@ export default function FeedCard({ entry }: { entry: FeedEntry }) {
             {tier}
           </span>
         </div>
+        <NftEstimatedPrice
+          affixes={affixRaritiesForPricing(metadata, entry.affixes)}
+        />
         {affixPills.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {affixPills.map((item, i) => (
