@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import {
+  affixBadgeItems,
   useGalleryRow,
   ipfsGateway,
   resolveIpfsUri,
@@ -19,6 +20,7 @@ export default function TokenDetail({ tokenId }: { tokenId: bigint }) {
   const borderClass = isRevealed
     ? RARITY_BORDER[highestRarity]
     : 'border-vapor-purple/40';
+  const affixPills = affixBadgeItems(metadata, affixes);
 
   return (
     <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2">
@@ -70,14 +72,14 @@ export default function TokenDetail({ tokenId }: { tokenId: bigint }) {
             {metadata.description}
           </p>
         )}
-        {affixes.length > 0 && (
+        {affixPills.length > 0 && (
           <div className="space-y-2">
             <h2 className="font-display text-xs uppercase tracking-wider text-vapor-muted">
               Affixes
             </h2>
             <div className="flex flex-wrap gap-2">
-              {affixes.map((a, i) => (
-                <AffixBadge key={i} rarity={a} />
+              {affixPills.map((item, i) => (
+                <AffixBadge key={i} rarity={item.rarity} label={item.label} />
               ))}
             </div>
           </div>

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import {
+  affixBadgeItems,
   useGalleryRow,
   ipfsGateway,
   resolveIpfsUri,
@@ -28,6 +29,7 @@ export default function NFTCard({ tokenId }: { tokenId: bigint }) {
   const ariaLabel = isRevealed
     ? `${metadata?.name ?? `Token ${tokenIdLabel}`}, ${highestRarity} tier`
     : `${tokenIdLabel}, revealing`;
+  const affixPills = affixBadgeItems(metadata, affixes);
 
   return (
     <Link
@@ -73,10 +75,10 @@ export default function NFTCard({ tokenId }: { tokenId: bigint }) {
             </span>
           )}
         </div>
-        {isRevealed && affixes.length > 0 && (
+        {isRevealed && affixPills.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {affixes.map((a, i) => (
-              <AffixBadge key={i} rarity={a} />
+            {affixPills.map((item, i) => (
+              <AffixBadge key={i} rarity={item.rarity} label={item.label} />
             ))}
           </div>
         )}

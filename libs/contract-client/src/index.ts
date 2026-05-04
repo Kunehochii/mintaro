@@ -12,6 +12,13 @@ export { useTokenMetadata } from './lib/gallery/useTokenMetadata.js';
 export { useTokenAffixes } from './lib/gallery/useTokenAffixes.js';
 export { useGalleryRow } from './lib/gallery/useGalleryRow.js';
 export { rarityFromAffixes } from './lib/gallery/rarityFromAffixes.js';
+export {
+  affixBadgeItems,
+  stackAffixBadgeItems,
+  MAX_METADATA_AFFIX_TRAITS,
+  rarityFromTraitValue,
+} from './lib/gallery/affixBadgeItems.js';
+export type { AffixBadgeItem } from './lib/gallery/affixBadgeItems.js';
 export { resolveIpfsUri } from './lib/gallery/ipfs.js';
 export {
   MINT_PRICE_DISPLAY,
