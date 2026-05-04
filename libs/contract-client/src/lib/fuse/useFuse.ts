@@ -26,6 +26,13 @@ export function mapFuseError(err: unknown): string {
   if (e?.code === 'ACTION_REJECTED') return 'Transaction rejected.';
   if (e?.reason) return e.reason;
   if (e?.code === 'CALL_EXCEPTION') {
+    // ethers v6 attaches .revert on decoded custom errors / reason strings
+    const revert = (e as Record<string, unknown>)?.revert as
+      | { args?: unknown[]; name?: string }
+      | undefined;
+    if (revert?.args?.[0] && typeof revert.args[0] === 'string') {
+      return revert.args[0];
+    }
     return 'Transaction reverted on-chain. One of the selected tokens may no longer be eligible.';
   }
   if (e?.message) return e.message;
@@ -52,6 +59,8 @@ export function useFuse(): UseFuseResult {
       try {
         setStatus({ kind: 'awaiting-signature' });
         const ids = [...tokenIds];
+        // staticCall decodes Solidity revert reasons; estimateGas does not.
+        await contract.fuse.staticCall(ids);
         const estimate = await contract.fuse.estimateGas(ids);
         const tx = await contract.fuse(ids, {
           gasLimit: (estimate * 130n) / 100n,

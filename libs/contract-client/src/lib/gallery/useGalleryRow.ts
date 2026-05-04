@@ -9,7 +9,11 @@ import type { GalleryToken } from './types.js';
 // per row that calls this hook, since React requires fixed hook order.
 export function useGalleryRow(tokenId: bigint): GalleryToken {
   const { tokenURI, metadata } = useTokenMetadata(tokenId);
-  const { affixes, isLoading: isAffixesLoading } = useTokenAffixes(tokenId);
+  const {
+    affixes,
+    isLoading: isAffixesLoading,
+    error: isAffixesError,
+  } = useTokenAffixes(tokenId);
   const isRevealed = Boolean(tokenURI && tokenURI.length > 0);
   return {
     tokenId,
@@ -17,6 +21,7 @@ export function useGalleryRow(tokenId: bigint): GalleryToken {
     metadata,
     affixes,
     isAffixesLoading,
+    isAffixesError,
     isRevealed,
     highestRarity: isRevealed ? rarityFromAffixes(affixes) : Rarity.Common,
   };

@@ -16,12 +16,18 @@ import {
 } from '../gallery/rarityStyles';
 
 export default function FuseNFTCard({ tokenId }: { tokenId: bigint }) {
-  const { metadata, affixes, isAffixesLoading, isRevealed, highestRarity } =
-    useGalleryRow(tokenId);
+  const {
+    metadata,
+    affixes,
+    isAffixesLoading,
+    isAffixesError,
+    isRevealed,
+    highestRarity,
+  } = useGalleryRow(tokenId);
   const { isSelected, toggle, isFull } = useFusionSelection();
 
   const selected = isSelected(tokenId);
-  const eligible = isFusionEligible(affixes);
+  const eligible = !isAffixesError && isFusionEligible(affixes);
   const stillLoading = isAffixesLoading;
   const disabledByCap = !selected && isFull;
 

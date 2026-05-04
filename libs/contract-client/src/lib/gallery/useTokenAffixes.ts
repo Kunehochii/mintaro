@@ -17,21 +17,25 @@ export function rarityFromUint8(raw: number | bigint): Rarity {
 export interface UseTokenAffixesResult {
   affixes: Rarity[];
   isLoading: boolean;
+  error: boolean;
 }
 
 export function useTokenAffixes(tokenId: bigint | null): UseTokenAffixesResult {
   const contract = useAffixContract();
   const [affixes, setAffixes] = useState<Rarity[]>([]);
   const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!contract || tokenId === null) {
       setAffixes([]);
       setLoading(false);
+      setError(false);
       return;
     }
     let cancelled = false;
     setLoading(true);
+    setError(false);
     (async () => {
       try {
         const raw = await contract.getAffixes(tokenId);
@@ -41,6 +45,7 @@ export function useTokenAffixes(tokenId: bigint | null): UseTokenAffixesResult {
         if (!cancelled) {
           console.warn(`useTokenAffixes: getAffixes(${tokenId}) failed`, err);
           setAffixes([]);
+          setError(true);
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -51,5 +56,5 @@ export function useTokenAffixes(tokenId: bigint | null): UseTokenAffixesResult {
     };
   }, [contract, tokenId]);
 
-  return { affixes, isLoading };
+  return { affixes, isLoading, error };
 }
