@@ -62,17 +62,27 @@ export function usePublicFeed(): UsePublicFeedResult {
       try {
         const fromBlock = deploymentBlock();
         const revealedFilter = contract.filters.TokenRevealed();
-        const revealedEvents = await contract.queryFilter(
-          revealedFilter,
-          fromBlock,
-        );
+        const fusedFilter = contract.filters.Fused();
+        const [revealedEvents, fusedEvents] = await Promise.all([
+          contract.queryFilter(revealedFilter, fromBlock),
+          contract.queryFilter(fusedFilter, fromBlock),
+        ]);
 
-        const reveals: RawReveal[] = revealedEvents.map((e) => ({
-          tokenId: e.args.tokenId,
-          uri: e.args.uri,
-          blockNumber: e.blockNumber,
-          logIndex: e.index,
-        }));
+        // Tokens consumed by fuse() are burned, so subsequent getAffixes/tokenURI
+        // reads revert. Drop them before the contract reads below.
+        const burned = new Set<bigint>();
+        for (const e of fusedEvents) {
+          for (const id of e.args.burnedTokenIds) burned.add(id);
+        }
+
+        const reveals: RawReveal[] = revealedEvents
+          .filter((e) => !burned.has(e.args.tokenId))
+          .map((e) => ({
+            tokenId: e.args.tokenId,
+            uri: e.args.uri,
+            blockNumber: e.blockNumber,
+            logIndex: e.index,
+          }));
 
         reveals.sort(
           (a, b) => b.blockNumber - a.blockNumber || b.logIndex - a.logIndex,

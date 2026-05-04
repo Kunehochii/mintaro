@@ -44,9 +44,11 @@ describe('usePublicFeed', () => {
 
     const revealedFilter = Symbol('revealed');
     const mintFilter = Symbol('mint');
+    const fusedFilter = Symbol('fused');
 
     const MintRequested = jest.fn((..._args: unknown[]) => mintFilter);
     const TokenRevealed = jest.fn(() => revealedFilter);
+    const Fused = jest.fn(() => fusedFilter);
 
     const queryFilter = jest.fn(async (filter: unknown) => {
       if (filter === revealedFilter) {
@@ -69,13 +71,16 @@ describe('usePublicFeed', () => {
           { args: { tokenId: 5n, minter: '0xBBB' } },
         ];
       }
+      if (filter === fusedFilter) {
+        return [];
+      }
       return [];
     });
 
     const getAffixes = jest.fn(async () => [0n, 1n, 2n]);
 
     mockedUseReadAffixContract.mockReturnValue({
-      filters: { MintRequested, TokenRevealed },
+      filters: { MintRequested, TokenRevealed, Fused },
       queryFilter,
       getAffixes,
     } as never);
@@ -95,5 +100,72 @@ describe('usePublicFeed', () => {
     expect(Array.isArray(arg)).toBe(true);
     expect(arg).toEqual(expect.arrayContaining([7n, 5n]));
     expect((arg as bigint[]).length).toBe(2);
+  });
+
+  it('drops tokens that were burned by fuse() before reading getAffixes', async () => {
+    process.env.NEXT_PUBLIC_DEPLOYMENT_BLOCK = '100';
+    process.env.NEXT_PUBLIC_RPC_URL = 'https://example.invalid';
+
+    const revealedFilter = Symbol('revealed');
+    const mintFilter = Symbol('mint');
+    const fusedFilter = Symbol('fused');
+
+    const MintRequested = jest.fn((..._args: unknown[]) => mintFilter);
+    const TokenRevealed = jest.fn(() => revealedFilter);
+    const Fused = jest.fn(() => fusedFilter);
+
+    const queryFilter = jest.fn(async (filter: unknown) => {
+      if (filter === revealedFilter) {
+        return [
+          {
+            args: { tokenId: 11n, uri: 'ipfs://eleven' },
+            blockNumber: 200,
+            index: 0,
+          },
+          {
+            args: { tokenId: 12n, uri: 'ipfs://twelve' },
+            blockNumber: 201,
+            index: 0,
+          },
+        ];
+      }
+      if (filter === mintFilter) {
+        return [{ args: { tokenId: 12n, minter: '0xCCC' } }];
+      }
+      if (filter === fusedFilter) {
+        return [
+          {
+            args: {
+              burnedTokenIds: [11n, 8n, 9n, 10n, 6n],
+              newTokenId: 20n,
+              minter: '0xDDD',
+            },
+          },
+        ];
+      }
+      return [];
+    });
+
+    const getAffixes = jest.fn(async () => [0n]);
+
+    mockedUseReadAffixContract.mockReturnValue({
+      filters: { MintRequested, TokenRevealed, Fused },
+      queryFilter,
+      getAffixes,
+    } as never);
+
+    mockedCreateReadProvider.mockReturnValue({
+      getBlock: jest.fn(async (bn: number) => ({
+        timestamp: BigInt(1_700_000_000 + bn),
+      })),
+    } as never);
+
+    const { result } = renderHook(() => usePublicFeed());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(result.current.error).toBeNull();
+    expect(getAffixes).toHaveBeenCalledTimes(1);
+    expect(getAffixes).toHaveBeenCalledWith(12n);
+    expect(getAffixes).not.toHaveBeenCalledWith(11n);
   });
 });
