@@ -45,7 +45,7 @@ describe('usePublicFeed', () => {
     const revealedFilter = Symbol('revealed');
     const mintFilter = Symbol('mint');
 
-    const MintRequested = jest.fn(() => mintFilter);
+    const MintRequested = jest.fn((..._args: unknown[]) => mintFilter);
     const TokenRevealed = jest.fn(() => revealedFilter);
 
     const queryFilter = jest.fn(async (filter: unknown) => {
