@@ -39,10 +39,8 @@ export interface UsePublicFeedResult {
 
 export function usePublicFeed(): UsePublicFeedResult {
   const contract = useReadAffixContract();
-  const provider = useMemo(
-    () => createReadProvider(process.env.NEXT_PUBLIC_RPC_URL),
-    [],
-  );
+  const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL;
+  const provider = useMemo(() => createReadProvider(rpcUrl), [rpcUrl]);
   const [entries, setEntries] = useState<FeedEntry[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -92,7 +90,11 @@ export function usePublicFeed(): UsePublicFeedResult {
         const tokenIds = Array.from(new Set(top.map((r) => r.tokenId)));
         const blockNumbers = Array.from(new Set(top.map((r) => r.blockNumber)));
 
-        const mintFilter = contract.filters.MintRequested();
+        // ethers v6 supports OR-matching an indexed arg by passing an array,
+        // but typechain types each indexed slot as a single value — cast through.
+        const mintFilter = contract.filters.MintRequested(
+          tokenIds as unknown as bigint,
+        );
 
         const [mintEvents, blocks, affixesPerToken] = await Promise.all([
           contract.queryFilter(mintFilter, fromBlock),

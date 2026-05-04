@@ -22,7 +22,7 @@ export default function FeedPage() {
         </h1>
         <p className="mt-3 max-w-prose font-body text-sm text-vapor-muted sm:text-base">
           The 50 most recent reveals across all wallets — refresh the page to
-          see new mints.
+          see new reveals.
         </p>
       </header>
 
