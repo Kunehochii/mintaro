@@ -20,8 +20,32 @@ export function rarityFromTraitValue(raw: string): Rarity {
 }
 
 /**
+ * Collapse duplicate tiers into one badge ordered by first occurrence, e.g.
+ * Common, Common, Rare → Common 2x then Rare.
+ */
+export function stackAffixBadgeItems(
+  items: AffixBadgeItem[],
+): AffixBadgeItem[] {
+  const order: Rarity[] = [];
+  const counts = new Map<Rarity, number>();
+  for (const item of items) {
+    const next = (counts.get(item.rarity) ?? 0) + 1;
+    counts.set(item.rarity, next);
+    if (next === 1) order.push(item.rarity);
+  }
+  return order.map((rarity) => {
+    const n = counts.get(rarity)!;
+    return {
+      rarity,
+      label: n > 1 ? `${rarity} ${n}x` : rarity,
+    };
+  });
+}
+
+/**
  * Prefers IPFS metadata `attributes` with `trait_type === "Affix"` (max five).
  * Falls back to on-chain `getAffixes` tiers when metadata has no Affix rows.
+ * Duplicate tiers are stacked with an `nx` suffix on the label.
  */
 export function affixBadgeItems(
   metadata: NFTMetadata | null | undefined,
@@ -29,8 +53,9 @@ export function affixBadgeItems(
 ): AffixBadgeItem[] {
   const attrs =
     metadata?.attributes?.filter((a) => a.trait_type === 'Affix') ?? [];
+  let flat: AffixBadgeItem[];
   if (attrs.length > 0) {
-    return attrs.slice(0, MAX_METADATA_AFFIX_TRAITS).map((a) => {
+    flat = attrs.slice(0, MAX_METADATA_AFFIX_TRAITS).map((a) => {
       const label =
         a.value === undefined || a.value === null ? '' : String(a.value);
       return {
@@ -38,6 +63,8 @@ export function affixBadgeItems(
         label,
       };
     });
+  } else {
+    flat = chainAffixes.map((r) => ({ rarity: r, label: r }));
   }
-  return chainAffixes.map((r) => ({ rarity: r, label: r }));
+  return stackAffixBadgeItems(flat);
 }

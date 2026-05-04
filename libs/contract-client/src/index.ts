@@ -14,6 +14,7 @@ export { useGalleryRow } from './lib/gallery/useGalleryRow.js';
 export { rarityFromAffixes } from './lib/gallery/rarityFromAffixes.js';
 export {
   affixBadgeItems,
+  stackAffixBadgeItems,
   MAX_METADATA_AFFIX_TRAITS,
   rarityFromTraitValue,
 } from './lib/gallery/affixBadgeItems.js';

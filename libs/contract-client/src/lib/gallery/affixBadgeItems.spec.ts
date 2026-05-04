@@ -1,8 +1,8 @@
 import { Rarity } from '@org/shared-types';
 import {
   affixBadgeItems,
-  MAX_METADATA_AFFIX_TRAITS,
   rarityFromTraitValue,
+  stackAffixBadgeItems,
 } from './affixBadgeItems.js';
 
 describe('rarityFromTraitValue', () => {
@@ -34,8 +34,7 @@ describe('affixBadgeItems', () => {
     };
     const items = affixBadgeItems(metadata, [Rarity.Divine]);
     expect(items).toEqual([
-      { rarity: Rarity.Common, label: 'Common' },
-      { rarity: Rarity.Common, label: 'Common' },
+      { rarity: Rarity.Common, label: 'Common 2x' },
       { rarity: Rarity.Rare, label: 'Rare' },
     ]);
   });
@@ -58,7 +57,11 @@ describe('affixBadgeItems', () => {
       value: i % 2 === 0 ? 'Common' : 'Rare',
     }));
     const items = affixBadgeItems({ attributes }, []);
-    expect(items.length).toBe(MAX_METADATA_AFFIX_TRAITS);
+    // First five: C,R,C,R,C → stacked to Common 3x, Rare 2x
+    expect(items).toEqual([
+      { rarity: Rarity.Common, label: 'Common 3x' },
+      { rarity: Rarity.Rare, label: 'Rare 2x' },
+    ]);
   });
 
   it('falls back to chain affixes when metadata has no Affix traits', () => {
@@ -73,6 +76,35 @@ describe('affixBadgeItems', () => {
     ]);
     expect(affixBadgeItems(null, [Rarity.Divine])).toEqual([
       { rarity: Rarity.Divine, label: 'Divine' },
+    ]);
+  });
+
+  it('stacks duplicate tiers from chain fallback', () => {
+    expect(
+      affixBadgeItems(null, [
+        Rarity.Common,
+        Rarity.Common,
+        Rarity.Rare,
+        Rarity.Common,
+      ]),
+    ).toEqual([
+      { rarity: Rarity.Common, label: 'Common 3x' },
+      { rarity: Rarity.Rare, label: 'Rare' },
+    ]);
+  });
+});
+
+describe('stackAffixBadgeItems', () => {
+  it('preserves first-seen rarity order when stacking', () => {
+    expect(
+      stackAffixBadgeItems([
+        { rarity: Rarity.Rare, label: 'Rare' },
+        { rarity: Rarity.Common, label: 'Common' },
+        { rarity: Rarity.Rare, label: 'Rare' },
+      ]),
+    ).toEqual([
+      { rarity: Rarity.Rare, label: 'Rare 2x' },
+      { rarity: Rarity.Common, label: 'Common' },
     ]);
   });
 });
