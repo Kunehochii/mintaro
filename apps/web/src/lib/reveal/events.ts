@@ -1,5 +1,6 @@
 import { JsonRpcProvider, Wallet, type ContractRunner } from 'ethers';
 import { AffixNFT__factory, type AffixNFT } from '@org/shared-types';
+import { deploymentBlock } from '@org/contract-client';
 
 let _provider: JsonRpcProvider | null = null;
 
@@ -35,7 +36,7 @@ export function getWallet(): Wallet {
 export async function findMintRequested(tokenId: number) {
   const contract = getContract();
   const filter = contract.filters.MintRequested(BigInt(tokenId));
-  return contract.queryFilter(filter, 0);
+  return contract.queryFilter(filter, deploymentBlock());
 }
 
 export async function findMintRequestedRange(
