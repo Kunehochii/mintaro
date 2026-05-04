@@ -63,6 +63,23 @@ describe('buildMintPrompt', () => {
     expect(prompt).toContain('solid design');
   });
 
+  it('should use customSubject when provided', () => {
+    const prompt = buildMintPrompt([Rarity.Common], 0, 'cyberpunk city');
+    expect(prompt).toContain('cyberpunk city');
+    expect(prompt).not.toContain('dragon');
+  });
+
+  it('should fall back to random subject when customSubject is empty', () => {
+    const prompt = buildMintPrompt([Rarity.Common], 0, '');
+    expect(prompt).toContain('dragon');
+  });
+
+  it('should trim whitespace from customSubject', () => {
+    const prompt = buildMintPrompt([Rarity.Common], 0, '  neon samurai  ');
+    expect(prompt).toContain('neon samurai');
+    expect(prompt).not.toContain('  neon samurai  ');
+  });
+
   it('should be a non-empty string', () => {
     const prompt = buildMintPrompt([], 0);
     expect(typeof prompt).toBe('string');

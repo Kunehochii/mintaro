@@ -16,8 +16,12 @@ const SUBJECTS = [
 export function buildMintPrompt(
   affixes: Rarity[],
   subjectIndex: number,
+  customSubject?: string,
 ): string {
-  const subject = SUBJECTS[subjectIndex % SUBJECTS.length];
+  const trimmed = customSubject?.trim();
+  const subject = trimmed
+    ? trimmed.slice(0, 100)
+    : SUBJECTS[subjectIndex % SUBJECTS.length];
   const affixList = affixes.join(', ');
   const divineCount = affixes.filter((a) => a === Rarity.Divine).length;
   const splendidCount = affixes.filter((a) => a === Rarity.Splendid).length;

@@ -244,75 +244,81 @@ export function useAffixNFT(
     [contractAddress, getRpcUrl],
   );
 
-  const doMint = useCallback(async () => {
-    const contract = getContract();
-    if (!contract) {
-      setMintState((prev) => ({ ...prev, error: 'Wallet not connected' }));
-      return;
-    }
-
-    const currentPrice = mintPrice ?? 0n;
-
-    setMintState({
-      status: 'pending',
-      tokenId: null,
-      txHash: null,
-      error: null,
-      imageUrl: null,
-      tokenUri: null,
-      affixes: [],
-      animationPlayed: false,
-    });
-
-    try {
-      const tx = await contract.mint({ value: currentPrice });
-      setMintState((prev) => ({
-        ...prev,
-        status: 'confirming',
-        txHash: tx.hash,
-      }));
-
-      const receipt = await tx.wait();
-
-      let tokenId = totalMinted;
-      for (const log of receipt.logs) {
-        if (log.topics[0] === MINT_REQUESTED_TOPIC && log.topics[1]) {
-          tokenId = parseInt(log.topics[1], 16);
-          break;
-        }
+  const doMint = useCallback(
+    async (subject?: string) => {
+      const contract = getContract();
+      if (!contract) {
+        setMintState((prev) => ({ ...prev, error: 'Wallet not connected' }));
+        return;
       }
 
-      storeLastTokenId(tokenId);
+      const currentPrice = mintPrice ?? 0n;
 
-      setMintState((prev) => ({
-        ...prev,
-        status: 'revealing',
-        tokenId,
-      }));
+      setMintState({
+        status: 'pending',
+        tokenId: null,
+        txHash: null,
+        error: null,
+        imageUrl: null,
+        tokenUri: null,
+        affixes: [],
+        animationPlayed: false,
+      });
 
       try {
-        const mintBlock = Number(receipt.blockNumber);
-        await fetch(
-          `/api/reveal/watch?fromBlock=${mintBlock}&toBlock=${mintBlock}`,
-        );
-      } catch {
-        // watch endpoint may not be running
-      }
+        const tx = await contract.mint({ value: currentPrice });
+        setMintState((prev) => ({
+          ...prev,
+          status: 'confirming',
+          txHash: tx.hash,
+        }));
 
-      void resolveTokenUri(tokenId, receipt.hash, false);
-      void fetchTotalMinted();
-    } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : 'Mint failed';
-      const actionRejected =
-        message.includes('ACTION_REJECTED') ||
-        message.includes('user rejected');
-      setMintState((prev) => ({
-        ...prev,
-        status: 'failed',
-        error: actionRejected ? 'Transaction rejected in MetaMask.' : message,
-      }));
-    }
-  }, [getContract, totalMinted, mintPrice, resolveTokenUri, fetchTotalMinted]);
+        const receipt = await tx.wait();
+
+        let tokenId = totalMinted;
+        for (const log of receipt.logs) {
+          if (log.topics[0] === MINT_REQUESTED_TOPIC && log.topics[1]) {
+            tokenId = parseInt(log.topics[1], 16);
+            break;
+          }
+        }
+
+        storeLastTokenId(tokenId);
+
+        setMintState((prev) => ({
+          ...prev,
+          status: 'revealing',
+          tokenId,
+        }));
+
+        try {
+          const mintBlock = Number(receipt.blockNumber);
+          const subjectParam = subject?.trim()
+            ? `&subject=${encodeURIComponent(subject.trim())}`
+            : '';
+          await fetch(
+            `/api/reveal/watch?fromBlock=${mintBlock}&toBlock=${mintBlock}${subjectParam}`,
+          );
+        } catch {
+          // watch endpoint may not be running
+        }
+
+        void resolveTokenUri(tokenId, receipt.hash, false);
+        void fetchTotalMinted();
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : 'Mint failed';
+        const actionRejected =
+          message.includes('ACTION_REJECTED') ||
+          message.includes('user rejected');
+        setMintState((prev) => ({
+          ...prev,
+          status: 'failed',
+          error: actionRejected ? 'Transaction rejected in MetaMask.' : message,
+        }));
+      }
+    },
+    [getContract, totalMinted, mintPrice, resolveTokenUri, fetchTotalMinted],
+  );
 
   const checkExistingToken = useCallback(
     async (tokenId: number) => {

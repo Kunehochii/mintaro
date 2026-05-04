@@ -52,6 +52,7 @@ export async function GET(request: Request) {
     const url = new URL(request.url);
     const fromBlockParam = url.searchParams.get('fromBlock');
     const toBlockParam = url.searchParams.get('toBlock');
+    const subject = url.searchParams.get('subject') ?? undefined;
 
     const provider = getProvider();
     const latestBlock = BigInt(await provider.getBlockNumber());
@@ -96,6 +97,7 @@ export async function GET(request: Request) {
         tokenId,
         log.args.seed,
         log.args.minter as Address,
+        subject,
       );
 
       return {
