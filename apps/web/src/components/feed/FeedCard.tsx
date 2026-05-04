@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import {
+  affixBadgeItems,
   type FeedEntry,
   formatRelativeTime,
   ipfsGateway,
@@ -27,6 +28,7 @@ export default function FeedCard({ entry }: { entry: FeedEntry }) {
   const borderClass = `${RARITY_BORDER[tier]} ${RARITY_BORDER_HOVER[tier]}`;
   const isoTimestamp = new Date(entry.timestampSec * 1000).toISOString();
   const ariaLabel = `${metadata?.name ?? `Token ${tokenIdLabel}`}, ${tier} tier, minted by ${truncateAddress(entry.minter)}`;
+  const affixPills = affixBadgeItems(metadata, entry.affixes);
 
   return (
     <Link
@@ -66,10 +68,10 @@ export default function FeedCard({ entry }: { entry: FeedEntry }) {
             {tier}
           </span>
         </div>
-        {entry.affixes.length > 0 && (
+        {affixPills.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {entry.affixes.map((a, i) => (
-              <AffixBadge key={i} rarity={a} />
+            {affixPills.map((item, i) => (
+              <AffixBadge key={i} rarity={item.rarity} label={item.label} />
             ))}
           </div>
         )}

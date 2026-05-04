@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import {
+  affixBadgeItems,
   ipfsGateway,
   isFusionEligible,
   resolveIpfsUri,
@@ -65,6 +66,7 @@ export default function FuseNFTCard({ tokenId }: { tokenId: bigint }) {
               : ''
       }`
     : `${tokenIdLabel}, revealing`;
+  const affixPills = affixBadgeItems(metadata, affixes);
 
   return (
     <button
@@ -150,10 +152,10 @@ export default function FuseNFTCard({ tokenId }: { tokenId: bigint }) {
             </span>
           )}
         </div>
-        {affixes.length > 0 && (
+        {affixPills.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {affixes.map((a, i) => (
-              <AffixBadge key={i} rarity={a} />
+            {affixPills.map((item, i) => (
+              <AffixBadge key={i} rarity={item.rarity} label={item.label} />
             ))}
           </div>
         )}
